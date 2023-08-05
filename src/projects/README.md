@@ -1,5 +1,5 @@
 ---
-title: Projects
+title: 项目
 index: false
 sidebar: false
 breadcrumb: false
@@ -12,12 +12,22 @@ next: false
 comment: false
 ---
 
-## Catalog
+<script setup lang="ts">
+import ProjectsPage from "@ProjectsPage";
+</script>
 
-- [Markdown Enhance](markdown.md)
+<ProjectsPage />
 
-- [Page Config](page.md)
-
-- [Function Disable](disable.md)
-
-- [Encryption Demo](encrypt.md)
+<style scoped lang="scss">
+.theme-hope-content {
+  margin: 0;
+  padding: 0;
+  max-width: none;
+  position: relative;
+  z-index: 1;
+  top: -161px;
+  @media (min-width: 1440px) {
+    padding-left: 16rem;
+  }
+}
+</style>

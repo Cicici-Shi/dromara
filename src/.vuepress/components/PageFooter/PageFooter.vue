@@ -39,7 +39,7 @@ import zhFooterOption from "./zh";
 let footerOption = ref({});
 
 const siteLocaleData = useSiteLocaleData();
-const lang = ref(siteLocaleData.value.lang);
+let lang = ref(siteLocaleData.value.lang);
 const frontmatter = usePageFrontmatter<DefaultThemePageFrontmatter>();
 // const sidebarItems = useSidebarItems();
 

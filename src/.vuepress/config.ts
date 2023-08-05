@@ -140,6 +140,10 @@ export default defineUserConfig({
       __dirname,
       "./components/PageFooter/PageFooter.vue"
     ),
+    "@ProjectsPage": path.resolve(
+      __dirname,
+      "components/ProjectsPage/ProjectsPage.vue"
+    ),
   },
   plugins: [
     // Search

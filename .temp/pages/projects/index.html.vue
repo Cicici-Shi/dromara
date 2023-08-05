@@ -1,18 +1,19 @@
-<template><div><h2 id="catalog" tabindex="-1"><a class="header-anchor" href="#catalog" aria-hidden="true">#</a> Catalog</h2>
-<ul>
-<li>
-<p><RouterLink to="/projects/markdown.html">Markdown Enhance</RouterLink></p>
-</li>
-<li>
-<p><RouterLink to="/projects/page.html">Page Config</RouterLink></p>
-</li>
-<li>
-<p><RouterLink to="/projects/disable.html">Function Disable</RouterLink></p>
-</li>
-<li>
-<p><RouterLink to="/projects/encrypt.html">Encryption Demo</RouterLink></p>
-</li>
-</ul>
-</div></template>
+<template><div><ProjectsPage /></div></template>
 
 
+<script setup lang="ts">
+import ProjectsPage from "@ProjectsPage";
+</script>
+<style scoped lang="scss">
+.theme-hope-content {
+  margin: 0;
+  padding: 0;
+  max-width: none;
+  position: relative;
+  z-index: 1;
+  top: -161px;
+  @media (min-width: 1440px) {
+    padding-left: 16rem;
+  }
+}
+</style>
