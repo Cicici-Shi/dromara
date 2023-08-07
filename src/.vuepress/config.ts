@@ -127,6 +127,7 @@ export default defineUserConfig({
         },
       },
       sidebarSorter: ["date-desc"],
+      blog: { name: "dromara" },
     },
     { custom: true }
   ),
@@ -143,6 +144,11 @@ export default defineUserConfig({
     "@ProjectsPage": path.resolve(
       __dirname,
       "components/ProjectsPage/ProjectsPage.vue"
+    ),
+    "@GitHubStars": path.resolve(__dirname, "components/GitHubStars.vue"),
+    "@NewsActivityBlogSection": path.resolve(
+      __dirname,
+      "components/NewsActivityBlogSection/NewsActivityBlogSection.vue"
     ),
   },
   plugins: [

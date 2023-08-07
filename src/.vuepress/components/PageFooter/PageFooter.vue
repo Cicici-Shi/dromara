@@ -47,6 +47,7 @@ watch(
   () => siteLocaleData.value.lang,
   (newLang) => {
     lang.value = newLang;
+    // console.log(frontmatter.value);
     // console.log(sidebarItems.value);
     if (lang.value == "zh-CN" || lang.value == "/zh/") {
       footerOption.value = zhFooterOption;

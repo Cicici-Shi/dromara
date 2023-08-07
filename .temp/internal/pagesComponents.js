@@ -5,14 +5,14 @@ export const pagesComponents = {
   "v-8daa1a0e": defineAsyncComponent(() => import(/* webpackChunkName: "v-8daa1a0e" */"D:/code/dromara website/dromara/.temp/pages/index.html.vue")),
   // path: /slides.html
   "v-2e3eac9e": defineAsyncComponent(() => import(/* webpackChunkName: "v-2e3eac9e" */"D:/code/dromara website/dromara/.temp/pages/slides.html.vue")),
+  // path: /activity/
+  "v-0aa6c427": defineAsyncComponent(() => import(/* webpackChunkName: "v-0aa6c427" */"D:/code/dromara website/dromara/.temp/pages/activity/index.html.vue")),
   // path: /awesome/
   "v-7ce29625": defineAsyncComponent(() => import(/* webpackChunkName: "v-7ce29625" */"D:/code/dromara website/dromara/.temp/pages/awesome/index.html.vue")),
   // path: /blog/
   "v-145ac574": defineAsyncComponent(() => import(/* webpackChunkName: "v-145ac574" */"D:/code/dromara website/dromara/.temp/pages/blog/index.html.vue")),
   // path: /blog/soul_source_learning_22_apache_dubbo.html
   "v-685b5622": defineAsyncComponent(() => import(/* webpackChunkName: "v-685b5622" */"D:/code/dromara website/dromara/.temp/pages/blog/soul_source_learning_22_apache_dubbo.html.vue")),
-  // path: /activity/
-  "v-0aa6c427": defineAsyncComponent(() => import(/* webpackChunkName: "v-0aa6c427" */"D:/code/dromara website/dromara/.temp/pages/activity/index.html.vue")),
   // path: /demo/disable.html
   "v-4e65ec78": defineAsyncComponent(() => import(/* webpackChunkName: "v-4e65ec78" */"D:/code/dromara website/dromara/.temp/pages/demo/disable.html.vue")),
   // path: /demo/encrypt.html
@@ -61,8 +61,6 @@ export const pagesComponents = {
   "v-62ced1a6": defineAsyncComponent(() => import(/* webpackChunkName: "v-62ced1a6" */"D:/code/dromara website/dromara/.temp/pages/zh/demo/page.html.vue")),
   // path: /zh/demo/
   "v-2b64e284": defineAsyncComponent(() => import(/* webpackChunkName: "v-2b64e284" */"D:/code/dromara website/dromara/.temp/pages/zh/demo/index.html.vue")),
-  // path: /zh/guide/
-  "v-47357bdb": defineAsyncComponent(() => import(/* webpackChunkName: "v-47357bdb" */"D:/code/dromara website/dromara/.temp/pages/zh/guide/index.html.vue")),
   // path: /zh/blog/
   "v-2b4be8a5": defineAsyncComponent(() => import(/* webpackChunkName: "v-2b4be8a5" */"D:/code/dromara website/dromara/.temp/pages/zh/blog/index.html.vue")),
   // path: /zh/blog/soul_source_learning_16_divide_sxj.html
@@ -79,6 +77,8 @@ export const pagesComponents = {
   "v-1fc031d4": defineAsyncComponent(() => import(/* webpackChunkName: "v-1fc031d4" */"D:/code/dromara website/dromara/.temp/pages/zh/blog/soul_source_learning_21_resilience4j.html.vue")),
   // path: /zh/blog/soul_source_learning_22_apache_dubbo.html
   "v-552cbe11": defineAsyncComponent(() => import(/* webpackChunkName: "v-552cbe11" */"D:/code/dromara website/dromara/.temp/pages/zh/blog/soul_source_learning_22_apache_dubbo.html.vue")),
+  // path: /zh/guide/
+  "v-47357bdb": defineAsyncComponent(() => import(/* webpackChunkName: "v-47357bdb" */"D:/code/dromara website/dromara/.temp/pages/zh/guide/index.html.vue")),
   // path: /zh/news/hmily-2.0.2.html
   "v-9f83481e": defineAsyncComponent(() => import(/* webpackChunkName: "v-9f83481e" */"D:/code/dromara website/dromara/.temp/pages/zh/news/hmily-2.0.2.html.vue")),
   // path: /zh/news/hmily-2.1.1.html

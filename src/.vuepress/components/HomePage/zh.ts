@@ -45,15 +45,155 @@ const zhHomeOption = {
     },
   ],
   COMMUNITY: "社区动态",
+  COMMUNITY_ITEM: [
+    {
+      category: "博客",
+      icon: "/assets/img/blog.png",
+      details: [
+        {
+          title: "Soul网关学习Apache Dubbo插件原理解析",
+          time: "2021-03-23",
+        },
+        {
+          title: "Soul网关学习Apache Dubbo插件原理解析",
+          time: "2021-03-23",
+        },
+        {
+          title: "Soul网关学习Apache Dubbo插件原理解析",
+          time: "2021-03-23",
+        },
+        {
+          title: "Soul网关学习Apache Dubbo插件原理解析",
+          time: "2021-03-23",
+        },
+        {
+          title: "Soul网关学习Apache Dubbo插件原理解析",
+          time: "2021-03-23",
+        },
+      ],
+    },
+    {
+      category: "活动",
+      icon: "/assets/img/activity.png",
+      details: [
+        {
+          title: "Soul网关学习Apache Dubbo插件原理解析",
+          time: "2021-03-23",
+        },
+        {
+          title: "Soul网关学习Apache Dubbo插件原理解析",
+          time: "2021-03-23",
+        },
+        {
+          title: "Soul网关学习Apache Dubbo插件原理解析",
+          time: "2021-03-23",
+        },
+        {
+          title: "Soul网关学习Apache Dubbo插件原理解析",
+          time: "2021-03-23",
+        },
+        {
+          title: "Soul网关学习Apache Dubbo插件原理解析",
+          time: "2021-03-23",
+        },
+      ],
+    },
+    {
+      category: "新闻",
+      icon: "/assets/img/news.png",
+      details: [
+        {
+          title: "Soul网关学习Apache Dubbo插件原理解析",
+          time: "2021-03-23",
+        },
+        {
+          title: "Soul网关学习Apache Dubbo插件原理解析",
+          time: "2021-03-23",
+        },
+        {
+          title: "Soul网关学习Apache Dubbo插件原理解析",
+          time: "2021-03-23",
+        },
+        {
+          title: "Soul网关学习Apache Dubbo插件原理解析",
+          time: "2021-03-23",
+        },
+        {
+          title: "Soul网关学习Apache Dubbo插件原理解析",
+          time: "2021-03-23",
+        },
+      ],
+    },
+  ],
   BLOG: "博客",
   BLOG_DETAILS: [
     {
       title: "Soul网关学习Apache Dubbo插件原理解析",
       time: "2021-03-23",
     },
+    {
+      title: "Soul网关学习Apache Dubbo插件原理解析",
+      time: "2021-03-23",
+    },
+    {
+      title: "Soul网关学习Apache Dubbo插件原理解析",
+      time: "2021-03-23",
+    },
+    {
+      title: "Soul网关学习Apache Dubbo插件原理解析",
+      time: "2021-03-23",
+    },
+    {
+      title: "Soul网关学习Apache Dubbo插件原理解析",
+      time: "2021-03-23",
+    },
   ],
   ACTIVITY: "活动",
+  ACTIVITY_DETAILS: [
+    {
+      title: "Soul网关学习Apache Dubbo插件原理解析",
+      time: "2021-03-23",
+    },
+    {
+      title: "Soul网关学习Apache Dubbo插件原理解析",
+      time: "2021-03-23",
+    },
+    {
+      title: "Soul网关学习Apache Dubbo插件原理解析",
+      time: "2021-03-23",
+    },
+    {
+      title: "Soul网关学习Apache Dubbo插件原理解析",
+      time: "2021-03-23",
+    },
+    {
+      title: "Soul网关学习Apache Dubbo插件原理解析",
+      time: "2021-03-23",
+    },
+  ],
   NEWS: "新闻",
+  NEWS_DETAILS: [
+    {
+      title: "Soul网关学习Apache Dubbo插件原理解析",
+      time: "2021-03-23",
+    },
+    {
+      title: "Soul网关学习Apache Dubbo插件原理解析",
+      time: "2021-03-23",
+    },
+    {
+      title: "Soul网关学习Apache Dubbo插件原理解析",
+      time: "2021-03-23",
+    },
+    {
+      title: "Soul网关学习Apache Dubbo插件原理解析",
+      time: "2021-03-23",
+    },
+    {
+      title: "Soul网关学习Apache Dubbo插件原理解析",
+      time: "2021-03-23",
+    },
+  ],
 };
 
 export default zhHomeOption;

@@ -36,14 +36,7 @@
                   /></a>
                 </template>
                 <template v-else>
-                  <a
-                    class="github-button"
-                    :href="`https://github.com/dromara/${obj.name}/stargazers`"
-                    data-icon="octicon-star"
-                    data-size="large"
-                    data-show-count="true"
-                  >
-                  </a>
+                  <GitHubStars :project="obj.name" />
                 </template>
               </div>
             </div>
@@ -76,6 +69,7 @@ import { useSiteLocaleData } from "@vuepress/client";
 import { ref, watch } from "vue";
 import enProjectsOption from "./en";
 import zhProjectsOption from "./zh";
+import GitHubStars from "@GitHubStars";
 
 let projectsOption = ref({});
 const siteLocaleData = useSiteLocaleData();
@@ -198,7 +192,7 @@ let projectItem = ref([
     ],
   },
   {
-    groupName: "企业级认证",
+    groupName: projectsOption.value.ENTERPRISE_CERTIFICATION,
     projects: [
       {
         name: "sa-token",
@@ -218,7 +212,7 @@ let projectItem = ref([
     ],
   },
   {
-    groupName: "运维管控",
+    groupName: projectsOption.value.OPERATIONS_AND_MAINTENANCE_CONTROL,
     projects: [
       {
         name: "Jpom",
@@ -233,7 +227,7 @@ let projectItem = ref([
     ],
   },
   {
-    groupName: "分布式日志",
+    groupName: projectsOption.value.DISTRIBUTED_LOG,
     projects: [
       {
         name: "TLog",
@@ -243,7 +237,7 @@ let projectItem = ref([
     ],
   },
   {
-    groupName: "Agent监控",
+    groupName: projectsOption.value.AGENT_MONITORING,
     projects: [
       {
         name: "cubic",
@@ -258,7 +252,7 @@ let projectItem = ref([
     ],
   },
   {
-    groupName: "微服务",
+    groupName: projectsOption.value.MICROSERVICE,
     projects: [
       {
         name: "koalas-rpc",
@@ -288,7 +282,7 @@ let projectItem = ref([
     ],
   },
   {
-    groupName: "分布式调度",
+    groupName: projectsOption.value.DISTRIBUTED_SCHEDULING,
     projects: [
       {
         name: "hodor",
@@ -303,109 +297,110 @@ let projectItem = ref([
 <style scoped lang="scss">
 .projects-page {
   padding-top: var(--navbar-height);
-  .project-container {
-    height: 422px;
-    min-width: 200px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 0 24px;
+}
+.project-container {
+  height: 422px;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 24px;
 
-    background: url(/assets/img/bg-projects.png) no-repeat;
-    background-size: cover;
-    background-position: center;
-    border-radius: 0.5rem;
-    @media (min-width: 960px) {
-      padding-left: 5rem;
+  background: url(/assets/img/bg-projects.png) no-repeat;
+  background-size: cover;
+  background-position: center;
+  border-radius: 0.5rem;
+  @media (min-width: 960px) {
+    padding-left: 5rem;
+  }
+  h1 {
+    margin: 0;
+    color: #171b25;
+    font-size: 44px;
+    font-weight: 900;
+  }
+  .description {
+    max-width: 700px;
+    padding-right: 52%;
+    color: #61687c;
+    font-size: 16px;
+    line-height: 28px;
+  }
+}
+
+.project-main {
+  background-color: #f9fbff;
+  padding: 30px 10vw;
+  @media (min-width: 1440px) {
+    padding: 30px 2vw;
+  }
+  .project-group {
+    padding: 50px 0 30px;
+  }
+  .group-name {
+    font-weight: 700;
+    margin: 0;
+    border: none;
+  }
+  .project-card {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    @media (max-width: 820px) {
+      grid-template-columns: 1fr;
+      gap: 0;
     }
-    h1 {
-      margin: 0;
-      color: #171b25;
-      font-size: 44px;
-      font-weight: 900;
-    }
-    .description {
-      max-width: 700px;
-      padding-right: 52%;
-      color: #61687c;
-      font-size: 16px;
-      line-height: 28px;
+    @media (min-width: 1220px) and (max-width: 1439px) {
+      grid-template-columns: repeat(3, 1fr);
     }
   }
-  .project-main {
-    background-color: #f9fbff;
-    padding: 30px 10vw;
-    @media (min-width: 1440px) {
-      padding: 30px 2vw;
-    }
-    .project-group {
-      padding: 50px 0 30px;
-    }
-    .group-name {
-      font-weight: 700;
-      margin: 0;
-      border: none;
-    }
-    .project-card {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 24px;
-      @media (max-width: 820px) {
-        grid-template-columns: 1fr;
-        gap: 0;
-      }
-      @media (min-width: 1220px) and (max-width: 1439px) {
-        grid-template-columns: repeat(3, 1fr);
-      }
-    }
-    .project {
+  .project {
+    display: flex;
+    min-width: 343px;
+    padding: 16px;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    border-radius: 8px;
+    background: #fff;
+  }
+  .project-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .project-title {
+    width: 100px;
+    height: 50px;
+    object-fit: contain;
+    &.text {
       display: flex;
-      min-width: 343px;
-      padding: 16px;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 16px;
-      border-radius: 8px;
-      background: #fff;
-    }
-    .project-header {
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
       align-items: center;
+      font-size: 20px;
+      font-weight: 500;
+      white-space: nowrap;
     }
-    .project-title {
-      width: 100px;
-      height: 50px;
-      object-fit: contain;
-      &.text {
-        display: flex;
-        align-items: center;
-        font-size: 20px;
-        font-weight: 500;
-        white-space: nowrap;
-      }
-    }
+  }
 
-    .project-buttons {
-      width: 100%;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
-      .project-button {
-        display: inline-block;
-        width: 110px;
-        height: 30px;
-        line-height: 30px;
-        color: #2e64fe;
-        background-color: #f8fbff;
-        border-radius: 4px;
-        text-align: center;
-        text-decoration: none;
-        &.primary {
-          background-color: #2274de;
-          color: #fff;
-        }
+  .project-buttons {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    .project-button {
+      display: inline-block;
+      width: 102px;
+      height: 30px;
+      line-height: 30px;
+      color: #2e64fe;
+      background-color: #f8fbff;
+      border-radius: 4px;
+      text-align: center;
+      &.primary {
+        background-color: #2274de;
+        color: #fff;
       }
     }
   }

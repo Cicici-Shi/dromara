@@ -12,12 +12,28 @@ next: false
 comment: false
 ---
 
-## Catalog
+<script setup lang="ts">
+import NewsActivityBlogSection from "@NewsActivityBlogSection";
+import { usePageFrontmatter } from "@vuepress/client";
+import type { DefaultThemePageFrontmatter } from "@vuepress/theme-default/lib/shared/index.js";
+import { ref, onBeforeMount } from "vue";
 
-- [Markdown Enhance](markdown.md)
+const frontmatter = usePageFrontmatter<DefaultThemePageFrontmatter>();
 
-- [Page Config](page.md)
+</script>
 
-- [Function Disable](disable.md)
+<NewsActivityBlogSection :title="frontmatter.title"/>
 
-- [Encryption Demo](encrypt.md)
+<style scoped lang="scss">
+.theme-hope-content {
+  margin: 0;
+  padding: 0;
+  max-width: none;
+  position: relative;
+  z-index: 1;
+  top: -161px;
+  @media (min-width: 1440px) {
+    padding-left: 16rem;
+  }
+}
+</style>

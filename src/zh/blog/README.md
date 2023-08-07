@@ -11,16 +11,28 @@ next: false
 comment: false
 ---
 
-- [soul_source_learning_22_apache_dubbo](soul_source_learning_22_apache_dubbo.md)
+<script setup lang="ts">
+import NewsActivityBlogSection from "@NewsActivityBlogSection";
+import { usePageFrontmatter } from "@vuepress/client";
+import type { DefaultThemePageFrontmatter } from "@vuepress/theme-default/lib/shared/index.js";
+import { ref, onBeforeMount } from "vue";
 
-- [soul_source_learning_21_resilience4j](soul_source_learning_21_resilience4j.md)
+const frontmatter = usePageFrontmatter<DefaultThemePageFrontmatter>();
 
-- [soul_source_learning_20_sentinel](soul_source_learning_20_sentinel.md)
+</script>
 
-- [soul_source_learning_19_redirect](soul_source_learning_19_redirect.md)
+<NewsActivityBlogSection :title="frontmatter.title"/>
 
-- [soul_source_learning_18_ratelimiter](soul_source_learning_18_ratelimiter.md)
-
-- [soul_source_learning_17_http](soul_source_learning_17_http.md)
-
-- [soul_source_learning_16_divide_sxj](soul_source_learning_16_divide_sxj.md)
+<style scoped lang="scss">
+.theme-hope-content {
+  margin: 0;
+  padding: 0;
+  max-width: none;
+  position: relative;
+  z-index: 1;
+  top: -161px;
+  @media (min-width: 1440px) {
+    padding-left: 16rem;
+  }
+}
+</style>

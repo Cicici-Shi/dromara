@@ -1,26 +1,25 @@
-<template><div><ul>
-<li>
-<p><RouterLink to="/zh/blog/soul_source_learning_22_apache_dubbo.html">soul_source_learning_22_apache_dubbo</RouterLink></p>
-</li>
-<li>
-<p><RouterLink to="/zh/blog/soul_source_learning_21_resilience4j.html">soul_source_learning_21_resilience4j</RouterLink></p>
-</li>
-<li>
-<p><RouterLink to="/zh/blog/soul_source_learning_20_sentinel.html">soul_source_learning_20_sentinel</RouterLink></p>
-</li>
-<li>
-<p><RouterLink to="/zh/blog/soul_source_learning_19_redirect.html">soul_source_learning_19_redirect</RouterLink></p>
-</li>
-<li>
-<p><RouterLink to="/zh/blog/soul_source_learning_18_ratelimiter.html">soul_source_learning_18_ratelimiter</RouterLink></p>
-</li>
-<li>
-<p><RouterLink to="/zh/blog/soul_source_learning_17_http.html">soul_source_learning_17_http</RouterLink></p>
-</li>
-<li>
-<p><RouterLink to="/zh/blog/soul_source_learning_16_divide_sxj.html">soul_source_learning_16_divide_sxj</RouterLink></p>
-</li>
-</ul>
-</div></template>
+<template><div><NewsActivityBlogSection :title="frontmatter.title"/></div></template>
 
 
+<script setup lang="ts">
+import NewsActivityBlogSection from "@NewsActivityBlogSection";
+import { usePageFrontmatter } from "@vuepress/client";
+import type { DefaultThemePageFrontmatter } from "@vuepress/theme-default/lib/shared/index.js";
+import { ref, onBeforeMount } from "vue";
+
+const frontmatter = usePageFrontmatter<DefaultThemePageFrontmatter>();
+
+</script>
+<style scoped lang="scss">
+.theme-hope-content {
+  margin: 0;
+  padding: 0;
+  max-width: none;
+  position: relative;
+  z-index: 1;
+  top: -161px;
+  @media (min-width: 1440px) {
+    padding-left: 16rem;
+  }
+}
+</style>

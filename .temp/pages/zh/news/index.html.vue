@@ -1,18 +1,25 @@
-<template><div><h2 id="catalog" tabindex="-1"><a class="header-anchor" href="#catalog" aria-hidden="true">#</a> Catalog</h2>
-<ul>
-<li>
-<p><RouterLink to="/zh/news/markdown.html">Markdown Enhance</RouterLink></p>
-</li>
-<li>
-<p><RouterLink to="/zh/news/page.html">Page Config</RouterLink></p>
-</li>
-<li>
-<p><RouterLink to="/zh/news/disable.html">Function Disable</RouterLink></p>
-</li>
-<li>
-<p><RouterLink to="/zh/news/encrypt.html">Encryption Demo</RouterLink></p>
-</li>
-</ul>
-</div></template>
+<template><div><NewsActivityBlogSection :title="frontmatter.title"/></div></template>
 
 
+<script setup lang="ts">
+import NewsActivityBlogSection from "@NewsActivityBlogSection";
+import {  usePageFrontmatter } from "@vuepress/client";
+import type { DefaultThemePageFrontmatter } from "@vuepress/theme-default/lib/shared/index.js";
+import { ref, onBeforeMount } from "vue";
+
+const frontmatter = usePageFrontmatter<DefaultThemePageFrontmatter>();
+
+</script>
+<style scoped lang="scss">
+.theme-hope-content {
+  margin: 0;
+  padding: 0;
+  max-width: none;
+  position: relative;
+  z-index: 1;
+  top: -161px;
+  @media (min-width: 1440px) {
+    padding-left: 16rem;
+  }
+}
+</style>

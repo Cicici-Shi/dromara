@@ -47,24 +47,87 @@ const enHomeOption = {
       description: "IDEA's postman.",
     },
   ],
-  //   PROJECT_DETAILS: [    PROJECT1: "Hmily",
-  //   PROJECT1_DESC: "Flexible distributed transaction solution.",
-  //   PROJECT2: "Hutool",
-  //   PROJECT2_DESC: "A set of tools that keep Java sweet.",
-  //   PROJECT3: "Sa-Token",
-  //   PROJECT3_DESC: "The most comprehensive Java permission framework.",
-  //   PROJECT4: "Jpom",
-  //   PROJECT4_DESC: "Simple & Low-intrusion project management platform.",
-  //   PROJECT5: "TLog",
-  //   PROJECT5_DESC: "Lightweight distributed log label tracking framework.",
-  //   PROJECT6: "Cubic",
-  //   PROJECT6_DESC: "Distributed monitoring system.",
-  //   PROJECT7: "Koalas-rpc",
-  //   PROJECT7_DESC: "Highly available and extensible RPC framework.",
-  //   PROJECT8: "Fast Request",
-  //   PROJECT8_DESC: "IDEA's postman.",
-  // ],
   COMMUNITY: "Community",
+  COMMUNITY_ITEM: [
+    {
+      category: "Blog",
+      icon: "/assets/img/blog.png",
+      details: [
+        {
+          title: "Soul Gateway Learning Apache Dubbo Plugin",
+          time: "2021-03-23",
+        },
+        {
+          title: "Soul Gateway Learning Apache Dubbo Plugin",
+          time: "2021-03-23",
+        },
+        {
+          title: "Soul Gateway Learning Apache Dubbo Plugin",
+          time: "2021-03-23",
+        },
+        {
+          title: "Soul Gateway Learning Apache Dubbo Plugin",
+          time: "2021-03-23",
+        },
+        {
+          title: "Soul Gateway Learning Apache Dubbo Plugin",
+          time: "2021-03-23",
+        },
+      ],
+    },
+    {
+      category: "Activity",
+      icon: "/assets/img/activity.png",
+      details: [
+        {
+          title: "Soul Gateway Learning Apache Dubbo Plugin",
+          time: "2021-03-23",
+        },
+        {
+          title: "Soul Gateway Learning Apache Dubbo Plugin",
+          time: "2021-03-23",
+        },
+        {
+          title: "Soul Gateway Learning Apache Dubbo Plugin",
+          time: "2021-03-23",
+        },
+        {
+          title: "Soul Gateway Learning Apache Dubbo Plugin",
+          time: "2021-03-23",
+        },
+        {
+          title: "Soul Gateway Learning Apache Dubbo Plugin",
+          time: "2021-03-23",
+        },
+      ],
+    },
+    {
+      category: "News",
+      icon: "/assets/img/news.png",
+      details: [
+        {
+          title: "Soul Gateway Learning Apache Dubbo Plugin",
+          time: "2021-03-23",
+        },
+        {
+          title: "Soul Gateway Learning Apache Dubbo Plugin",
+          time: "2021-03-23",
+        },
+        {
+          title: "Soul Gateway Learning Apache Dubbo Plugin",
+          time: "2021-03-23",
+        },
+        {
+          title: "Soul Gateway Learning Apache Dubbo Plugin",
+          time: "2021-03-23",
+        },
+        {
+          title: "Soul Gateway Learning Apache Dubbo Plugin",
+          time: "2021-03-23",
+        },
+      ],
+    },
+  ],
   BLOG: "Blog",
   BLOG_DETAILS: [
     {
@@ -89,7 +152,51 @@ const enHomeOption = {
     },
   ],
   ACTIVITY: "Activity",
+  ACTIVITY_DETAILS: [
+    {
+      title: "Soul Gateway Learning Apache Dubbo Plugin",
+      time: "2021-03-23",
+    },
+    {
+      title: "Soul Gateway Learning Apache Dubbo Plugin",
+      time: "2021-03-23",
+    },
+    {
+      title: "Soul Gateway Learning Apache Dubbo Plugin",
+      time: "2021-03-23",
+    },
+    {
+      title: "Soul Gateway Learning Apache Dubbo Plugin",
+      time: "2021-03-23",
+    },
+    {
+      title: "Soul Gateway Learning Apache Dubbo Plugin",
+      time: "2021-03-23",
+    },
+  ],
   NEWS: "News",
+  NEWS_DETAILS: [
+    {
+      title: "Soul Gateway Learning Apache Dubbo Plugin",
+      time: "2021-03-23",
+    },
+    {
+      title: "Soul Gateway Learning Apache Dubbo Plugin",
+      time: "2021-03-23",
+    },
+    {
+      title: "Soul Gateway Learning Apache Dubbo Plugin",
+      time: "2021-03-23",
+    },
+    {
+      title: "Soul Gateway Learning Apache Dubbo Plugin",
+      time: "2021-03-23",
+    },
+    {
+      title: "Soul Gateway Learning Apache Dubbo Plugin",
+      time: "2021-03-23",
+    },
+  ],
 };
 
 export default enHomeOption;
