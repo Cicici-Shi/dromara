@@ -141,7 +141,6 @@ watch(
   () => siteLocaleData.value.lang,
   (newLang) => {
     lang.value = newLang;
-    console.log(lang.value);
     if (lang.value == "zh-CN" || lang.value == "/zh/") {
       homeOption.value = zhHomeOption;
     } else {

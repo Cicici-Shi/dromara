@@ -11,7 +11,6 @@ import clientConfig9 from 'D:/code/dromara website/dromara/.temp/md-enhance/conf
 import clientConfig10 from 'D:/code/dromara website/dromara/node_modules/.pnpm/registry.npmmirror.com+vuepress-plugin-photo-swipe@2.0.0-beta.233_sass-loader@13.3.2_vuepress@2.0.0-beta.66/node_modules/vuepress-plugin-photo-swipe/lib/client/config.js'
 import clientConfig11 from 'D:/code/dromara website/dromara/.temp/theme-hope/config.js'
 import clientConfig12 from 'D:/code/dromara website/dromara/node_modules/.pnpm/registry.npmmirror.com+vuepress-plugin-search-pro@2.0.0-beta.233_sass-loader@13.3.2_vuepress@2.0.0-beta.66/node_modules/vuepress-plugin-search-pro/lib/client/config.js'
-import clientConfig13 from 'D:/code/dromara website/dromara/src/.vuepress/client.ts'
 
 export const clientConfigs = [
   clientConfig0,
@@ -27,5 +26,4 @@ export const clientConfigs = [
   clientConfig10,
   clientConfig11,
   clientConfig12,
-  clientConfig13,
 ]

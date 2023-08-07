@@ -5,12 +5,12 @@ export const pagesData = {
   "v-2e3eac9e": () => import(/* webpackChunkName: "v-2e3eac9e" */"D:/code/dromara website/dromara/.temp/pages/slides.html.js").then(({ data }) => data),
   // path: /activity/
   "v-0aa6c427": () => import(/* webpackChunkName: "v-0aa6c427" */"D:/code/dromara website/dromara/.temp/pages/activity/index.html.js").then(({ data }) => data),
+  // path: /awesome/
+  "v-7ce29625": () => import(/* webpackChunkName: "v-7ce29625" */"D:/code/dromara website/dromara/.temp/pages/awesome/index.html.js").then(({ data }) => data),
   // path: /blog/
   "v-145ac574": () => import(/* webpackChunkName: "v-145ac574" */"D:/code/dromara website/dromara/.temp/pages/blog/index.html.js").then(({ data }) => data),
   // path: /blog/soul_source_learning_22_apache_dubbo.html
   "v-685b5622": () => import(/* webpackChunkName: "v-685b5622" */"D:/code/dromara website/dromara/.temp/pages/blog/soul_source_learning_22_apache_dubbo.html.js").then(({ data }) => data),
-  // path: /awesome/
-  "v-7ce29625": () => import(/* webpackChunkName: "v-7ce29625" */"D:/code/dromara website/dromara/.temp/pages/awesome/index.html.js").then(({ data }) => data),
   // path: /demo/disable.html
   "v-4e65ec78": () => import(/* webpackChunkName: "v-4e65ec78" */"D:/code/dromara website/dromara/.temp/pages/demo/disable.html.js").then(({ data }) => data),
   // path: /demo/encrypt.html
@@ -49,18 +49,6 @@ export const pagesData = {
   "v-3100e6d8": () => import(/* webpackChunkName: "v-3100e6d8" */"D:/code/dromara website/dromara/.temp/pages/zh/activity/index.html.js").then(({ data }) => data),
   // path: /zh/awesome/
   "v-4450d954": () => import(/* webpackChunkName: "v-4450d954" */"D:/code/dromara website/dromara/.temp/pages/zh/awesome/index.html.js").then(({ data }) => data),
-  // path: /zh/demo/disable.html
-  "v-c1942916": () => import(/* webpackChunkName: "v-c1942916" */"D:/code/dromara website/dromara/.temp/pages/zh/demo/disable.html.js").then(({ data }) => data),
-  // path: /zh/demo/encrypt.html
-  "v-65c00218": () => import(/* webpackChunkName: "v-65c00218" */"D:/code/dromara website/dromara/.temp/pages/zh/demo/encrypt.html.js").then(({ data }) => data),
-  // path: /zh/demo/markdown.html
-  "v-36295574": () => import(/* webpackChunkName: "v-36295574" */"D:/code/dromara website/dromara/.temp/pages/zh/demo/markdown.html.js").then(({ data }) => data),
-  // path: /zh/demo/page.html
-  "v-62ced1a6": () => import(/* webpackChunkName: "v-62ced1a6" */"D:/code/dromara website/dromara/.temp/pages/zh/demo/page.html.js").then(({ data }) => data),
-  // path: /zh/demo/
-  "v-2b64e284": () => import(/* webpackChunkName: "v-2b64e284" */"D:/code/dromara website/dromara/.temp/pages/zh/demo/index.html.js").then(({ data }) => data),
-  // path: /zh/guide/
-  "v-47357bdb": () => import(/* webpackChunkName: "v-47357bdb" */"D:/code/dromara website/dromara/.temp/pages/zh/guide/index.html.js").then(({ data }) => data),
   // path: /zh/blog/
   "v-2b4be8a5": () => import(/* webpackChunkName: "v-2b4be8a5" */"D:/code/dromara website/dromara/.temp/pages/zh/blog/index.html.js").then(({ data }) => data),
   // path: /zh/blog/soul_source_learning_16_divide_sxj.html
@@ -77,6 +65,18 @@ export const pagesData = {
   "v-1fc031d4": () => import(/* webpackChunkName: "v-1fc031d4" */"D:/code/dromara website/dromara/.temp/pages/zh/blog/soul_source_learning_21_resilience4j.html.js").then(({ data }) => data),
   // path: /zh/blog/soul_source_learning_22_apache_dubbo.html
   "v-552cbe11": () => import(/* webpackChunkName: "v-552cbe11" */"D:/code/dromara website/dromara/.temp/pages/zh/blog/soul_source_learning_22_apache_dubbo.html.js").then(({ data }) => data),
+  // path: /zh/demo/disable.html
+  "v-c1942916": () => import(/* webpackChunkName: "v-c1942916" */"D:/code/dromara website/dromara/.temp/pages/zh/demo/disable.html.js").then(({ data }) => data),
+  // path: /zh/demo/encrypt.html
+  "v-65c00218": () => import(/* webpackChunkName: "v-65c00218" */"D:/code/dromara website/dromara/.temp/pages/zh/demo/encrypt.html.js").then(({ data }) => data),
+  // path: /zh/demo/markdown.html
+  "v-36295574": () => import(/* webpackChunkName: "v-36295574" */"D:/code/dromara website/dromara/.temp/pages/zh/demo/markdown.html.js").then(({ data }) => data),
+  // path: /zh/demo/page.html
+  "v-62ced1a6": () => import(/* webpackChunkName: "v-62ced1a6" */"D:/code/dromara website/dromara/.temp/pages/zh/demo/page.html.js").then(({ data }) => data),
+  // path: /zh/demo/
+  "v-2b64e284": () => import(/* webpackChunkName: "v-2b64e284" */"D:/code/dromara website/dromara/.temp/pages/zh/demo/index.html.js").then(({ data }) => data),
+  // path: /zh/guide/
+  "v-47357bdb": () => import(/* webpackChunkName: "v-47357bdb" */"D:/code/dromara website/dromara/.temp/pages/zh/guide/index.html.js").then(({ data }) => data),
   // path: /zh/news/hmily-2.0.2.html
   "v-9f83481e": () => import(/* webpackChunkName: "v-9f83481e" */"D:/code/dromara website/dromara/.temp/pages/zh/news/hmily-2.0.2.html.js").then(({ data }) => data),
   // path: /zh/news/hmily-2.1.1.html

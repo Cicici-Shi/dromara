@@ -162,6 +162,7 @@ const TAGS = [
     display: flex;
     padding: 16px;
     flex-direction: column;
+    justify-content: space-between;
     gap: 16px;
     border-radius: 8px;
     background: #fff;
