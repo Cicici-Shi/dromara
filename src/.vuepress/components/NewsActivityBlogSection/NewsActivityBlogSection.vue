@@ -1,8 +1,10 @@
 <template>
   <div class="news-activity-blog-section">
-    <div class="news-activity-blog-container">
-      <h1 class="title">{{ title }}</h1>
-      <p class="description">{{ option.DESC }}</p>
+    <div class="bg-white">
+      <div class="news-activity-blog-container">
+        <h1 class="title">{{ title }}</h1>
+        <p class="description">{{ option.DESC }}</p>
+      </div>
     </div>
     <main class="news-activity-blog-main">
       <h2 class="tag">Tag</h2>
@@ -85,6 +87,9 @@ const TAGS = [
 <style scoped lang="scss">
 .news-activity-blog-section {
   padding-top: var(--navbar-height);
+  .bg-white {
+    background-color: #f9fbff;
+  }
 }
 .news-activity-blog-container {
   height: 422px;
@@ -127,6 +132,7 @@ const TAGS = [
     align-items: center;
     gap: 16px;
     margin-bottom: 36px;
+    flex-wrap: wrap;
   }
   .tag-button {
     display: flex;
@@ -208,8 +214,5 @@ const TAGS = [
     width: 44px;
     border-radius: 12px;
   }
-  // .author-info {
-  //   flex-direction: column;
-  // }
 }
 </style>

@@ -1,10 +1,12 @@
 <template>
   <div class="projects-page">
-    <div class="project-container">
-      <h1 class="title">{{ projectsOption.PROJECTS }}</h1>
-      <p class="description">
-        {{ projectsOption.DESCRIPTION }}
-      </p>
+    <div class="bg-white">
+      <div class="project-container">
+        <h1 class="title">{{ projectsOption.PROJECTS }}</h1>
+        <p class="description">
+          {{ projectsOption.DESCRIPTION }}
+        </p>
+      </div>
     </div>
     <main class="project-main">
       <div
@@ -297,6 +299,9 @@ let projectItem = ref([
 <style scoped lang="scss">
 .projects-page {
   padding-top: var(--navbar-height);
+  .bg-white {
+    background-color: #f9fbff;
+  }
 }
 .project-container {
   height: 422px;
