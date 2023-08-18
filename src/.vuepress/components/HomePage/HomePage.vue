@@ -53,11 +53,11 @@
 
     <div class="project">
       <h2 class="header">{{ homeOption.PROJECT }}</h2>
-      <p class="more">{{ homeOption.MORE_PROJECTS + "&nbsp;&nbsp;>" }}</p>
+      <p class="more">{{ homeOption.MORE_PROJECTS + '&nbsp;&nbsp;>' }}</p>
       <div class="project-container">
         <img class="project-img" src="/assets/img/projects.png" alt="project" />
         <div class="projects">
-          <template v-for="item in homeOption.PROJECT_DETAILS">
+          <template v-for="item in homeOption.PROJECT_DETAILS" :key="item.name">
             <div class="project-item">
               <div class="top-text">{{ item.name }}</div>
               <div class="bottom-text">{{ item.description }}</div>
@@ -70,85 +70,71 @@
       <h2 class="header">{{ homeOption.COMMUNITY }}</h2>
       <div class="feature-wrapper">
         <div class="feature">
-          <div class="feature-container">
-            <div class="feature-title">
-              <img src="/assets/img/blog.png" alt="blog" />
-              <h2>{{ homeOption.BLOG }}</h2>
-            </div>
-            <template v-for="item in homeOption.BLOG_DETAILS">
-              <div class="community-item">
-                <div class="content">
-                  <div class="title">{{ item.title }}</div>
-                  <div class="time">{{ item.time }}</div>
-                </div>
-                <div class="icon-container">
-                  <div class="icon">></div>
-                </div>
+          <template
+            v-for="section in homeOption.COMMUNITY_ITEM"
+            :key="section.category"
+          >
+            <div class="feature-container">
+              <div class="feature-title">
+                <img :src="section.icon" />
+                <h2>{{ section.category }}</h2>
               </div>
-            </template>
-          </div>
-          <div class="feature-container">
-            <div class="feature-title">
-              <img src="/assets/img/activity.png" alt="activity" />
-              <h2>{{ homeOption.ACTIVITY }}</h2>
+              <template v-for="item in section.details" :key="item.title">
+                <div class="community-item">
+                  <div class="content">
+                    <div class="title">{{ item.title }}</div>
+                    <div class="time">{{ item.time }}</div>
+                  </div>
+                  <div class="icon-container">
+                    <div class="icon">></div>
+                  </div>
+                </div>
+              </template>
             </div>
-            <template v-for="item in homeOption.BLOG_DETAILS">
-              <div class="community-item">
-                <div class="content">
-                  <div class="title">{{ item.title }}</div>
-                  <div class="time">{{ item.time }}</div>
-                </div>
-                <div class="icon-container">
-                  <div class="icon">></div>
-                </div>
-              </div>
-            </template>
-          </div>
-          <div class="feature-container">
-            <div class="feature-title">
-              <img src="/assets/img/news.png" alt="news" />
-              <h2>{{ homeOption.NEWS }}</h2>
-            </div>
-            <template v-for="item in homeOption.BLOG_DETAILS">
-              <div class="community-item">
-                <div class="content">
-                  <div class="title">{{ item.title }}</div>
-                  <div class="time">{{ item.time }}</div>
-                </div>
-                <div class="icon-container">
-                  <div class="icon">></div>
-                </div>
-              </div>
-            </template>
-          </div>
+          </template>
         </div>
       </div>
     </div>
   </div>
 </template>
 <script setup lang="ts">
-import { watch } from "vue";
-import { ref } from "vue";
-import { useSiteLocaleData } from "@vuepress/client";
-import enHomeOption from "./en";
-import zhHomeOption from "./zh";
+import { watch, ref, reactive } from 'vue';
+import { type HomeOption } from './types';
+import { useSiteLocaleData } from '@vuepress/client';
+import enHomeOption from './en';
+import zhHomeOption from './zh';
 
 const siteLocaleData = useSiteLocaleData();
 const lang = ref(siteLocaleData.value.lang);
 
-let homeOption = ref({});
+let homeOption: HomeOption = reactive({
+  QUICK_START: '',
+  DESCRIPTION: '',
+  OPEN: '',
+  OPEN_DESCRIPTION: '',
+  VISION: '',
+  VISION_DESCRIPTION: '',
+  SLOGAN: '',
+  SLOGAN_DESCRIPTION: '',
+  PROJECT: '',
+  MORE_PROJECTS: '',
+  PROJECT_DETAILS: [],
+  COMMUNITY: '',
+  COMMUNITY_ITEM: []
+});
+
 watch(
   () => siteLocaleData.value.lang,
   (newLang) => {
     lang.value = newLang;
-    if (lang.value == "zh-CN" || lang.value == "/zh/") {
-      homeOption.value = zhHomeOption;
+    if (lang.value === 'zh-CN' || lang.value === '/zh/') {
+      homeOption = zhHomeOption;
     } else {
-      homeOption.value = enHomeOption;
+      homeOption = enHomeOption;
     }
   },
   {
-    immediate: true,
+    immediate: true
   }
 );
 </script>
@@ -183,10 +169,10 @@ watch(
       font-weight: bold;
       font-size: 3.6rem;
       -webkit-text-fill-color: transparent;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
-        "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica,
-        Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
-        "Segoe UI Symbol";
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC',
+        'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica,
+        Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol';
 
       @media (max-width: 959px) {
         font-size: 2.5rem;

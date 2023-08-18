@@ -10,20 +10,22 @@
       <h2 class="tag">Tag</h2>
 
       <div class="buttons">
-        <template v-for="item in TAGS" :keys="item">
+        <div v-for="item in TAGS" :key="item">
           <button
             :class="{ selected: currentTag === item, 'tag-button': true }"
             @click="currentTag = item"
           >
             {{ item }}
           </button>
-        </template>
+        </div>
       </div>
       <div class="cards">
-        <div v-for="obj in option.CARDS" class="card">
+        <div v-for="obj in option.CARDS" :key="obj.name" class="card">
           <img class="cover" :src="obj.cover" :alt="obj.name" />
           <div class="tag-items">
-            <div v-for="tag in obj.tags" class="tag-item">#{{ tag }}</div>
+            <div v-for="tag in obj.tags" :key="tag" class="tag-item">
+              #{{ tag }}
+            </div>
           </div>
           <a class="title">{{ obj.name }}</a>
           <p class="desc">{{ obj.desc }}</p>
@@ -44,21 +46,27 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import { ref, reactive, watchEffect } from 'vue';
+import { type ActivityOption } from './types';
+
+import enActivityOption from './enActivity';
+import enBlogOption from './enBlog';
+import enNewsOption from './enNews';
+import zhActivityOption from './zhActivity';
+import zhBlogOption from './zhBlog';
+import zhNewsOption from './zhNews';
+
 const props = defineProps({
-  title: String,
+  title: String
 });
 
-import { ref, watchEffect } from "vue";
-import enActivityOption from "./enActivity";
-import enBlogOption from "./enBlog";
-import enNewsOption from "./enNews";
-import zhActivityOption from "./zhActivity";
-import zhBlogOption from "./zhBlog";
-import zhNewsOption from "./zhNews";
+let option: ActivityOption = reactive({
+  DESC: '',
+  CARDS: []
+});
 
-let option = ref({});
-let currentTag = ref("All");
+const currentTag = ref('All');
 
 const options = {
   News: enNewsOption,
@@ -66,21 +74,23 @@ const options = {
   Activity: enActivityOption,
   活动: zhActivityOption,
   Blog: enBlogOption,
-  博客: zhBlogOption,
+  博客: zhBlogOption
 };
 watchEffect(() => {
-  option.value = options[props.title];
+  if (props.title !== undefined) {
+    option = options[props.title as keyof typeof options];
+  }
 });
 
 const TAGS = [
-  "All",
-  "DreamCode",
-  "Dromara",
-  "GateWay",
-  "himly",
-  "Reactor",
-  "Soul",
-  "TCC",
+  'All',
+  'DreamCode',
+  'Dromara',
+  'GateWay',
+  'himly',
+  'Reactor',
+  'Soul',
+  'TCC'
 ];
 </script>
 

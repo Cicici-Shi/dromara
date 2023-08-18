@@ -2,17 +2,21 @@
   <footer class="page-footer">
     <div v-if="frontmatter.home" class="container">
       <div class="links">
-        <template v-for="item in linkOption">
+        <template v-for="item in linkOption" :key="item.title">
           <div class="cate">
             <h2 class="cate-title">{{ item.title }}</h2>
-            <a class="link" v-for="link in item.links" :href="link.href">{{
-              link.name
-            }}</a>
+            <a
+              class="link"
+              v-for="link in item.links"
+              :key="link.name"
+              :href="link.href"
+              >{{ link.name }}</a
+            >
           </div>
         </template>
       </div>
       <div class="qrcode">
-        <div v-for="item in QrcodeOption">
+        <div v-for="item in QrcodeOption" :key="item.name">
           <img
             class="qrcode-img"
             :src="getImageSrc(item.name)"
@@ -29,17 +33,28 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from "vue";
-import { useSiteLocaleData, usePageFrontmatter } from "@vuepress/client";
-import type { DefaultThemePageFrontmatter } from "@vuepress/theme-default/lib/shared/index.js";
-import enFooterOption from "./en";
-import zhFooterOption from "./zh";
+import { ref, reactive, watch, computed } from 'vue';
+import { type FooterOption } from './types';
+import { useSiteLocaleData, usePageFrontmatter } from '@vuepress/client';
+import type { DefaultThemePageFrontmatter } from '@vuepress/theme-default/lib/shared/index.js';
+import enFooterOption from './en';
+import zhFooterOption from './zh';
 // import { useSidebarItems } from "@vuepress/theme-default/lib/client/composables/index.js";
 
-let footerOption = ref({});
+let footerOption: FooterOption = reactive({
+  RESOURCES: '',
+  INVOLVED: '',
+  FEEDBACK: '',
+  COMMUNITY: '',
+  BLOG: '',
+  DOCUMENT: '',
+  WECHAT: '',
+  QQ: '',
+  KNOWLEDGE_PLANET: ''
+});
 
 const siteLocaleData = useSiteLocaleData();
-let lang = ref(siteLocaleData.value.lang);
+const lang = ref(siteLocaleData.value.lang);
 const frontmatter = usePageFrontmatter<DefaultThemePageFrontmatter>();
 // const sidebarItems = useSidebarItems();
 
@@ -47,68 +62,66 @@ watch(
   () => siteLocaleData.value.lang,
   (newLang) => {
     lang.value = newLang;
-    // console.log(frontmatter.value);
-    // console.log(sidebarItems.value);
-    if (lang.value == "zh-CN" || lang.value == "/zh/") {
-      footerOption.value = zhFooterOption;
+    if (lang.value === 'zh-CN' || lang.value === '/zh/') {
+      footerOption = zhFooterOption;
     } else {
-      footerOption.value = enFooterOption;
+      footerOption = enFooterOption;
     }
   },
   {
-    immediate: true,
+    immediate: true
   }
 );
 
-let linkOption = ref([
+const linkOption = ref([
   {
-    title: footerOption.value.RESOURCES,
+    title: footerOption.RESOURCES,
     links: [
-      { name: "Github", href: "https://github.com/dromara" },
-      { name: "Gitee", href: "https://gitee.com/dromara" },
-    ],
+      { name: 'Github', href: 'https://github.com/dromara' },
+      { name: 'Gitee', href: 'https://gitee.com/dromara' }
+    ]
   },
   {
-    title: footerOption.value.INVOLVED,
+    title: footerOption.INVOLVED,
     links: [
       {
-        name: footerOption.value.FEEDBACK,
-        href: "https://github.com/dromara/soul/issues/new",
+        name: footerOption.FEEDBACK,
+        href: 'https://github.com/dromara/soul/issues/new'
       },
       {
-        name: footerOption.value.COMMUNITY,
-        href: "https://dromara.org/zh/community",
+        name: footerOption.COMMUNITY,
+        href: 'https://dromara.org/zh/community'
       },
-      { name: footerOption.value.BLOG, href: "https://dromara.org/zh/blog" },
-    ],
+      { name: footerOption.BLOG, href: 'https://dromara.org/zh/blog' }
+    ]
   },
   {
-    title: footerOption.value.DOCUMENT,
+    title: footerOption.DOCUMENT,
     links: [
       {
-        name: "Hmily",
-        href: "https://dromara.org/zh/projects/hmily/overview/",
+        name: 'Hmily',
+        href: 'https://dromara.org/zh/projects/hmily/overview/'
       },
       {
-        name: "Raincat",
-        href: "https://dromara.org/zh/projects/raincat/overview/",
+        name: 'Raincat',
+        href: 'https://dromara.org/zh/projects/raincat/overview/'
       },
       {
-        name: "Myth",
-        href: "https://dromara.org/zh/projects/myth/overview/",
-      },
-    ],
-  },
+        name: 'Myth',
+        href: 'https://dromara.org/zh/projects/myth/overview/'
+      }
+    ]
+  }
 ]);
 
-let QrcodeOption = ref([
-  { title: footerOption.value.WECHAT, name: "qrcode_wx" },
-  { title: footerOption.value.QQ, name: "qrcode_qq" },
-  { title: footerOption.value.KNOWLEDGE_PLANET, name: "qrcode_zsxq" },
+const QrcodeOption = ref([
+  { title: footerOption.WECHAT, name: 'qrcode_wx' },
+  { title: footerOption.QQ, name: 'qrcode_qq' },
+  { title: footerOption.KNOWLEDGE_PLANET, name: 'qrcode_zsxq' }
 ]);
 
 const getImageSrc = computed(() => {
-  return (name) => {
+  return (name: string) => {
     return `/assets/img/${name}.png`;
   };
 });

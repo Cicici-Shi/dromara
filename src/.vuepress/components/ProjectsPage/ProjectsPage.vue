@@ -16,7 +16,7 @@
       >
         <h2 class="group-name">{{ item.groupName }}</h2>
         <div class="project-card">
-          <div class="project" v-for="obj in item.projects">
+          <div class="project" v-for="obj in item.projects" :key="obj.name">
             <div class="project-header">
               <img
                 v-if="!isImageMissing(obj.name)"
@@ -66,233 +66,284 @@
   </div>
 </template>
 
-<script setup>
-import { useSiteLocaleData } from "@vuepress/client";
-import { ref, watch } from "vue";
-import enProjectsOption from "./en";
-import zhProjectsOption from "./zh";
-import GitHubStars from "@GitHubStars";
+<script setup lang="ts">
+import { useSiteLocaleData } from '@vuepress/client';
+import { type ProjectsOption } from './types';
+import { ref, reactive, watch } from 'vue';
+import enProjectsOption from './en';
+import zhProjectsOption from './zh';
+import GitHubStars from '@GitHubStars';
 
-let projectsOption = ref({});
+let projectsOption: ProjectsOption = reactive({
+  PROJECTS: '',
+  DESCRIPTION: '',
+  START_UP: '',
+
+  DISTRIBUTED_TRANSACTION: '',
+  HMILY_DESC: '',
+  RAINCAT_DESC: '',
+  MYTH_DESC: '',
+
+  POPULAR_TOOLS: '',
+  HUTOOL_DESC: '',
+  FOREST_DESC: '',
+  LITEFLOW_DESC: '',
+  DYNAMIC_TP_DESC: '',
+  EASY_ES_DESC: '',
+  GO_VIEW_DESC: '',
+  IMAGE_COMBINER_DESC: '',
+  JINX_DESC: '',
+  ELECTRON_EGG_DESC: '',
+  NORTHSTAR_DESC: '',
+  EASY_TRANS_DESC: '',
+  FAST_REQUEST_DESC: '',
+  REDISFRONT_DESC: '',
+
+  ENTERPRISE_CERTIFICATION: '',
+  SA_TOKEN_DESC: '',
+  MAXKEY_DESC: '',
+  SURENESS_DESC: '',
+
+  OPERATIONS_AND_MAINTENANCE_CONTROL: '',
+  JPOM_DESC: '',
+  HERTZBEAT_DESC: '',
+
+  DISTRIBUTED_LOG: '',
+  TLOG_DESC: '',
+
+  AGENT_MONITORING: '',
+  CUBIC_DESC: '',
+  ATHENA_DESC: '',
+
+  MICROSERVICE: '',
+  KOALAS_RPC_DESC: '',
+  MENDMIX_DESC: '',
+  LAMP_CLOUD_DESC: '',
+  DANTE_CLOUD_DESC: '',
+  OPEN_CAPACITY_PLATFORM_DESC: '',
+
+  DISTRIBUTED_SCHEDULING: '',
+  HODOR_DESC: ''
+});
 const siteLocaleData = useSiteLocaleData();
-let lang = ref(siteLocaleData.value.lang);
+const lang = ref(siteLocaleData.value.lang);
 
 watch(
   () => siteLocaleData.value.lang,
   (newLang) => {
     lang.value = newLang;
-    if (lang.value == "zh-CN" || lang.value == "/zh/") {
-      projectsOption.value = zhProjectsOption;
+    if (lang.value === 'zh-CN' || lang.value === '/zh/') {
+      projectsOption = zhProjectsOption;
     } else {
-      projectsOption.value = enProjectsOption;
+      projectsOption = enProjectsOption;
     }
   },
   {
-    immediate: true,
+    immediate: true
   }
 );
 
-const isImageMissing = (name) => {
-  const missingImages = ["jinx", "athena", "open-capacity-platform", "hodor"];
+const isImageMissing = (name: string): boolean => {
+  const missingImages = ['jinx', 'athena', 'open-capacity-platform', 'hodor'];
   return missingImages.includes(name);
 };
-const convertToUpperCamelCase = (name) => {
+const convertToUpperCamelCase = (name: string): string => {
   return name
-    .replace(/-([a-z])/g, (letter) => letter.toUpperCase())
-    .replace(/^([a-z])/, (letter) => letter.toUpperCase());
+    .replace(/-([a-z])/g, (letter: string) => letter.toUpperCase())
+    .replace(/^([a-z])/, (letter: string) => letter.toUpperCase());
 };
-const noGiteeProjects = ["jinx", "athena"];
-let projectItem = ref([
+const noGiteeProjects = ['jinx', 'athena'];
+const projectItem = ref([
   {
-    groupName: projectsOption.value.DISTRIBUTED_TRANSACTION,
+    groupName: projectsOption.DISTRIBUTED_TRANSACTION,
     projects: [
       {
-        name: "hmily",
-        website: "https://dromara.org/zh/projects/hmily/overview/",
-        description: projectsOption.value.HMILY_DESC,
+        name: 'hmily',
+        website: 'https://dromara.org/zh/projects/hmily/overview/',
+        description: projectsOption.HMILY_DESC
       },
       {
-        name: "Raincat",
-        website: "https://dromara.org/zh/projects/raincat/overview/",
-        description: projectsOption.value.RAINCAT_DESC,
+        name: 'Raincat',
+        website: 'https://dromara.org/zh/projects/raincat/overview/',
+        description: projectsOption.RAINCAT_DESC
       },
       {
-        name: "myth",
-        website: "https://dromara.org/zh/projects/myth/overview/",
-        description: projectsOption.value.MYTH_DESC,
-      },
-    ],
+        name: 'myth',
+        website: 'https://dromara.org/zh/projects/myth/overview/',
+        description: projectsOption.MYTH_DESC
+      }
+    ]
   },
   {
-    groupName: projectsOption.value.POPULAR_TOOLS,
+    groupName: projectsOption.POPULAR_TOOLS,
     projects: [
       {
-        name: "hutool",
-        website: "https://hutool.cn/",
-        description: projectsOption.value.HUTOOL_DESC,
+        name: 'hutool',
+        website: 'https://hutool.cn/',
+        description: projectsOption.HUTOOL_DESC
       },
       {
-        name: "forest",
-        website: "https://forest.dtflyx.com/",
-        description: projectsOption.value.FOREST_DESC,
+        name: 'forest',
+        website: 'https://forest.dtflyx.com/',
+        description: projectsOption.FOREST_DESC
       },
       {
-        name: "liteFlow",
-        website: "https://yomahub.com/liteflow/",
-        description: projectsOption.value.LITEFLOW_DESC,
+        name: 'liteFlow',
+        website: 'https://yomahub.com/liteflow/',
+        description: projectsOption.LITEFLOW_DESC
       },
       {
-        name: "dynamic-tp",
-        website: "https://juejin.cn/column/7053801521502224392",
-        description: projectsOption.value.DYNAMIC_TP_DESC,
+        name: 'dynamic-tp',
+        website: 'https://juejin.cn/column/7053801521502224392',
+        description: projectsOption.DYNAMIC_TP_DESC
       },
       {
-        name: "easy-es",
-        website: "https://easy-es.cn/",
-        description: projectsOption.value.EASY_ES_DESC,
+        name: 'easy-es',
+        website: 'https://easy-es.cn/',
+        description: projectsOption.EASY_ES_DESC
       },
       {
-        name: "go-view",
-        website: "http://www.mtruning.club:81/",
-        description: projectsOption.value.GO_VIEW_DESC,
+        name: 'go-view',
+        website: 'http://www.mtruning.club:81/',
+        description: projectsOption.GO_VIEW_DESC
       },
       {
-        name: "image-combiner",
-        website: "http://dromara.gitee.io/image-combiner",
-        description: projectsOption.value.IMAGE_COMBINER_DESC,
+        name: 'image-combiner',
+        website: 'http://dromara.gitee.io/image-combiner',
+        description: projectsOption.IMAGE_COMBINER_DESC
       },
       {
-        name: "jinx",
-        website: "https://dromara.org/zh/projects/jinx/overview",
-        description: projectsOption.value.JINX_DESC,
+        name: 'jinx',
+        website: 'https://dromara.org/zh/projects/jinx/overview',
+        description: projectsOption.JINX_DESC
       },
       {
-        name: "electron-egg",
-        website: "https://www.yuque.com/u34495/mivcfg",
-        description: projectsOption.value.ELECTRON_EGG_DESC,
+        name: 'electron-egg',
+        website: 'https://www.yuque.com/u34495/mivcfg',
+        description: projectsOption.ELECTRON_EGG_DESC
       },
       {
-        name: "northstar",
-        website: "https://www.quantit.tech/",
-        description: projectsOption.value.NORTHSTAR_DESC,
+        name: 'northstar',
+        website: 'https://www.quantit.tech/',
+        description: projectsOption.NORTHSTAR_DESC
       },
       {
-        name: "easy_trans",
-        website: "http://easy-trans.fhs-opensource.top/",
-        description: projectsOption.value.EASY_TRANS_DESC,
+        name: 'easy_trans',
+        website: 'http://easy-trans.fhs-opensource.top/',
+        description: projectsOption.EASY_TRANS_DESC
       },
       {
-        name: "fast-request",
-        website: "https://dromara.org/fast-request",
-        description: projectsOption.value.FAST_REQUEST_DESC,
+        name: 'fast-request',
+        website: 'https://dromara.org/fast-request',
+        description: projectsOption.FAST_REQUEST_DESC
       },
       {
-        name: "redisfront",
-        website: "https://www.redisfront.com/",
-        description: projectsOption.value.REDISFRONT_DESC,
-      },
-    ],
+        name: 'redisfront',
+        website: 'https://www.redisfront.com/',
+        description: projectsOption.REDISFRONT_DESC
+      }
+    ]
   },
   {
-    groupName: projectsOption.value.ENTERPRISE_CERTIFICATION,
+    groupName: projectsOption.ENTERPRISE_CERTIFICATION,
     projects: [
       {
-        name: "sa-token",
-        website: "http://sa-token.dev33.cn/",
-        description: projectsOption.value.SA_TOKEN_DESC,
+        name: 'sa-token',
+        website: 'http://sa-token.dev33.cn/',
+        description: projectsOption.SA_TOKEN_DESC
       },
       {
-        name: "MaxKey",
-        website: "https://maxkey.top/",
-        description: projectsOption.value.MAXKEY_DESC,
+        name: 'MaxKey',
+        website: 'https://maxkey.top/',
+        description: projectsOption.MAXKEY_DESC
       },
       {
-        name: "sureness",
-        website: "https://dromara.org/sureness",
-        description: projectsOption.value.SURENESS_DESC,
-      },
-    ],
+        name: 'sureness',
+        website: 'https://dromara.org/sureness',
+        description: projectsOption.SURENESS_DESC
+      }
+    ]
   },
   {
-    groupName: projectsOption.value.OPERATIONS_AND_MAINTENANCE_CONTROL,
+    groupName: projectsOption.OPERATIONS_AND_MAINTENANCE_CONTROL,
     projects: [
       {
-        name: "Jpom",
-        website: "https://jpom.io/",
-        description: projectsOption.value.JPOM_DESC,
+        name: 'Jpom',
+        website: 'https://jpom.io/',
+        description: projectsOption.JPOM_DESC
       },
       {
-        name: "hertzbeat",
-        website: "https://hertzbeat.com/",
-        description: projectsOption.value.HERTZBEAT_DESC,
-      },
-    ],
+        name: 'hertzbeat',
+        website: 'https://hertzbeat.com/',
+        description: projectsOption.HERTZBEAT_DESC
+      }
+    ]
   },
   {
-    groupName: projectsOption.value.DISTRIBUTED_LOG,
+    groupName: projectsOption.DISTRIBUTED_LOG,
     projects: [
       {
-        name: "TLog",
-        website: "https://yomahub.com/tlog/",
-        description: projectsOption.value.TLOG_DESC,
-      },
-    ],
+        name: 'TLog',
+        website: 'https://yomahub.com/tlog/',
+        description: projectsOption.TLOG_DESC
+      }
+    ]
   },
   {
-    groupName: projectsOption.value.AGENT_MONITORING,
+    groupName: projectsOption.AGENT_MONITORING,
     projects: [
       {
-        name: "cubic",
-        website: "https://cubic.jiagoujishu.com/",
-        description: projectsOption.value.CUBIC_DESC,
+        name: 'cubic',
+        website: 'https://cubic.jiagoujishu.com/',
+        description: projectsOption.CUBIC_DESC
       },
       {
-        name: "athena",
-        website: "https://dromara.org/zh/projects/raincat/overview/",
-        description: projectsOption.value.ATHENA_DESC,
-      },
-    ],
+        name: 'athena',
+        website: 'https://dromara.org/zh/projects/raincat/overview/',
+        description: projectsOption.ATHENA_DESC
+      }
+    ]
   },
   {
-    groupName: projectsOption.value.MICROSERVICE,
+    groupName: projectsOption.MICROSERVICE,
     projects: [
       {
-        name: "koalas-rpc",
-        website: "https://github.com/dromara/koalas-rpc",
-        description: projectsOption.value.KOALAS_RPC_DESC,
+        name: 'koalas-rpc',
+        website: 'https://github.com/dromara/koalas-rpc',
+        description: projectsOption.KOALAS_RPC_DESC
       },
       {
-        name: "mendmix",
-        website: "https://www.jeesuite.com/",
-        description: projectsOption.value.MENDMIX_DESC,
+        name: 'mendmix',
+        website: 'https://www.jeesuite.com/',
+        description: projectsOption.MENDMIX_DESC
       },
       {
-        name: "lamp-cloud",
-        website: "https://tangyh.top/",
-        description: projectsOption.value.LAMP_CLOUD_DESC,
+        name: 'lamp-cloud',
+        website: 'https://tangyh.top/',
+        description: projectsOption.LAMP_CLOUD_DESC
       },
       {
-        name: "dante-cloud",
-        website: "https://www.herodotus.cn/",
-        description: projectsOption.value.DANTE_CLOUD_DESC,
+        name: 'dante-cloud',
+        website: 'https://www.herodotus.cn/',
+        description: projectsOption.DANTE_CLOUD_DESC
       },
       {
-        name: "open-capacity-platform",
-        website: "https://gitee.com/dromara/open-capacity-platform/",
-        description: projectsOption.value.OPEN_CAPACITY_PLATFORM_DESC,
-      },
-    ],
+        name: 'open-capacity-platform',
+        website: 'https://gitee.com/dromara/open-capacity-platform/',
+        description: projectsOption.OPEN_CAPACITY_PLATFORM_DESC
+      }
+    ]
   },
   {
-    groupName: projectsOption.value.DISTRIBUTED_SCHEDULING,
+    groupName: projectsOption.DISTRIBUTED_SCHEDULING,
     projects: [
       {
-        name: "hodor",
-        website: "https://dromara.org/zh/projects/hodor/overview",
-        description: projectsOption.value.HODOR_DESC,
-      },
-    ],
-  },
+        name: 'hodor',
+        website: 'https://dromara.org/zh/projects/hodor/overview',
+        description: projectsOption.HODOR_DESC
+      }
+    ]
+  }
 ]);
 </script>
 
