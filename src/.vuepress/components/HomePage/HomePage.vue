@@ -21,15 +21,15 @@
         </div>
       </div>
       <div class="feature-wrapper">
-        <div class="feature">
-          <div class="feature-container">
+        <div class="feature slogan">
+          <div class="feature-container slogan-container">
             <div class="feature-title">
               <img src="/assets/img/open.png" alt="open" />
               <h2>{{ homeOption.OPEN }}</h2>
             </div>
             <p class="home-description">{{ homeOption.OPEN_DESCRIPTION }}</p>
           </div>
-          <div class="feature-container">
+          <div class="feature-container slogan-container">
             <div class="feature-title">
               <img src="/assets/img/vision.png" alt="vision" />
               <h2>{{ homeOption.VISION }}</h2>
@@ -38,7 +38,7 @@
               {{ homeOption.VISION_DESCRIPTION }}
             </p>
           </div>
-          <div class="feature-container">
+          <div class="feature-container slogan-container">
             <div class="feature-title">
               <img src="/assets/img/slogan.png" alt="slogan" />
               <h2>{{ homeOption.SLOGAN }}</h2>
@@ -52,7 +52,7 @@
     </div>
 
     <div class="project">
-      <h2 class="header">{{ homeOption.PROJECT }}</h2>
+      <h2 class="header-project">{{ homeOption.PROJECT }}</h2>
       <p class="more">{{ homeOption.MORE_PROJECTS + '&nbsp;&nbsp;>' }}</p>
       <div class="project-container">
         <img class="project-img" src="/assets/img/projects.png" alt="project" />
@@ -67,7 +67,7 @@
       </div>
     </div>
     <div class="community">
-      <h2 class="header">{{ homeOption.COMMUNITY }}</h2>
+      <h2 class="header-community">{{ homeOption.COMMUNITY }}</h2>
       <div class="feature-wrapper">
         <div class="feature">
           <template
@@ -86,7 +86,22 @@
                     <div class="time">{{ item.time }}</div>
                   </div>
                   <div class="icon-container">
-                    <div class="icon">></div>
+                    <div class="icon">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 14 12"
+                        fill="none"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          clip-rule="evenodd"
+                          d="M10.1903 5.26519L6.22065 1.29552L7.28131 0.234863L13.0616 6.01519L7.28131 11.7955L6.22065 10.7349L10.1903 6.76519H0.000976562V5.26519H10.1903Z"
+                          fill="#1D1D1B"
+                        ></path>
+                      </svg>
+                    </div>
                   </div>
                 </div>
               </template>
@@ -98,7 +113,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { watch, ref, reactive } from 'vue';
+import { watch, ref, reactive, onMounted } from 'vue';
 import { type HomeOption } from './types';
 import { useSiteLocaleData } from '@vuepress/client';
 import enHomeOption from './en';
@@ -137,6 +152,46 @@ watch(
     immediate: true
   }
 );
+onMounted(() => {
+  const scalingElementProject = document.querySelector(
+    '.header-project'
+  ) as HTMLHeadingElement;
+  const scalingElementCommunity = document.querySelector(
+    '.header-community'
+  ) as HTMLHeadingElement;
+
+  const clientH = window.innerHeight;
+
+  const halfViewportHeight = clientH / 2;
+  function applyScale (
+    element: HTMLHeadingElement,
+    top: number,
+    midPoint: number
+  ): void {
+    if (top <= clientH && midPoint <= top) {
+      const scale = 1 + (1.2 * (top - midPoint)) / midPoint;
+      element.style.transform = `scale(${scale})`;
+    }
+  }
+
+  function updateScales (): void {
+    applyScale(
+      scalingElementProject,
+      scalingElementProject.getBoundingClientRect().top,
+      halfViewportHeight
+    );
+    applyScale(
+      scalingElementCommunity,
+      scalingElementCommunity.getBoundingClientRect().top,
+      halfViewportHeight + 20
+    );
+  }
+  window.addEventListener('scroll', updateScales);
+
+  window.addEventListener('beforeunload', () => {
+    window.removeEventListener('scroll', updateScales);
+  });
+});
 </script>
 <style scoped lang="scss">
 .home-page {
@@ -250,24 +305,35 @@ watch(
     justify-content: space-between;
     border-radius: 6px;
     box-shadow: 0px 4px 32px 0px rgba(64, 93, 149, 0.05);
-    background-color: rgba(255, 255, 255, 0.9);
     box-sizing: border-box;
     min-height: 210px;
+    &.slogan :hover {
+      transform: translateY(-5%);
+      transition: transform 250ms ease-in-out;
+    }
+
     @media (max-width: 800px) {
       flex-direction: column;
     }
     .feature-container {
-      margin: 20px 42px;
       display: flex;
       flex-direction: column;
       background-color: rgba(255, 255, 255, 0.9);
-      img {
-        margin: 0 20px 10px 0;
+      margin: 20px 12px;
+      border-radius: 0.375rem;
+      padding: 20px 42px;
+      &.slogan-container :hover {
+        transform: translateY(0);
       }
 
       @media (min-width: 800px) {
         width: 30%;
       }
+
+      img {
+        margin: 0 20px 10px 0;
+      }
+
       .feature-title {
         display: flex;
         align-items: center;
@@ -333,9 +399,11 @@ watch(
       }
     }
   }
-  .header {
+  .header-project,
+  .header-community {
     text-align: center;
     font-weight: 700;
+    transform: scale(2.2);
   }
   .more {
     color: #2e64fe;
@@ -381,8 +449,24 @@ watch(
       align-items: center;
       padding: 10px;
       cursor: pointer;
+      position: relative;
+
       &:hover {
-        color: blue;
+        .content::after {
+          content: '';
+          position: absolute;
+          bottom: -1px;
+          height: 1px;
+          width: 100%;
+          left: 0;
+          animation: bottom 750ms ease-in-out;
+          background-color: #b8b8b5;
+          background-color: #1d1d1b;
+        }
+        .icon {
+          transform: translateX(5px);
+          transition: transform 250ms ease-in-out;
+        }
       }
     }
 
@@ -422,6 +506,22 @@ watch(
 
   .home h3 {
     font-size: 4rem;
+  }
+}
+@keyframes bottom {
+  0% {
+    right: 0;
+    left: auto;
+    width: 100%;
+  }
+
+  50% {
+    width: 0%;
+  }
+
+  100% {
+    width: 100%;
+    left: 0;
   }
 }
 </style>

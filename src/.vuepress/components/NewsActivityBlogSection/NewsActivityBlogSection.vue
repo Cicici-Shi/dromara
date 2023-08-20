@@ -7,7 +7,7 @@
       </div>
     </div>
     <main class="news-activity-blog-main">
-      <h2 class="tag">Tag</h2>
+      <h2 class="tag">{{ getTag }}</h2>
 
       <div class="buttons">
         <div v-for="item in TAGS" :key="item">
@@ -66,8 +66,22 @@ let option: ActivityOption = reactive({
   CARDS: []
 });
 
+const tag = ref('Tag');
 const currentTag = ref('All');
 
+type TagMapping = Record<string, 'Tag' | '标签'>;
+
+function getTag (input: string): 'Tag' | '标签' {
+  const tagMapping: TagMapping = {
+    News: 'Tag',
+    Activity: 'Tag',
+    Blog: 'Tag',
+    新闻: '标签',
+    活动: '标签',
+    博客: '标签'
+  };
+  return (input !== '' && input !== undefined && tagMapping[input]) ?? 'Tag';
+}
 const options = {
   News: enNewsOption,
   新闻: zhNewsOption,
@@ -79,6 +93,7 @@ const options = {
 watchEffect(() => {
   if (props.title !== undefined) {
     option = options[props.title as keyof typeof options];
+    tag.value = getTag(props.title);
   }
 });
 
@@ -97,6 +112,7 @@ const TAGS = [
 <style scoped lang="scss">
 .news-activity-blog-section {
   padding-top: var(--navbar-height);
+  min-width: 600px;
   .bg-white {
     background-color: #f9fbff;
   }

@@ -1,5 +1,5 @@
 const enBlogOption = {
-  DESC: 'blog-description',
+  DESC: `Dromara's collaborative blog offers open-source insights, covering projects, trends, and best practices. Explore updates on distributed systems, microservices, and operational monitoring. Our blog accompanies you in exploring the open-source domain.`,
   CARDS: [
     {
       name: 'Dromara Soul Source Code 01 Reading Sharing Session 02',

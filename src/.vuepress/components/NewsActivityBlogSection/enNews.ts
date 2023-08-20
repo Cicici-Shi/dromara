@@ -1,5 +1,5 @@
 const enNewsOption = {
-  DESC: 'news-description',
+  DESC: `Explore the latest trends within the Dromara Open Source Community. We are dedicated to bringing you the freshest updates, innovations, and collaborative efforts from Dromara. Our news section offers a comprehensive resource for understanding Dromara, allowing you to stay connected with our ongoing development.`,
   CARDS: [
     {
       name: 'Dromara Soul Source Code 01 Reading Sharing Session 02',

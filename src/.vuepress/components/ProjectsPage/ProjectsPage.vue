@@ -350,6 +350,7 @@ const projectItem = ref([
 <style scoped lang="scss">
 .projects-page {
   padding-top: var(--navbar-height);
+  min-width: 600px;
   .bg-white {
     background-color: #f9fbff;
   }

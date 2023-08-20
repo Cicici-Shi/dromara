@@ -3,7 +3,7 @@ import { ProjectsOption } from './types';
 const zhProjectsOption: ProjectsOption = {
   PROJECTS: '项目',
   DESCRIPTION:
-    '在Dromara，我们的项目是我们的创新成果，我们乐于与您分享和交流。您可以在我们的项目中找到您感兴趣的作品，也可以在Gitee或GitHub上查看我们的源码。',
+    'Dromara开源社区，汇集一流开源项目作者，提供开源产品、解决方案、咨询、支持和培训。涵盖分布式事务、工具、认证、微服务RPC、监控、日志、大数据等领域。加入我们，体验开源的乐趣。',
   START_UP: '开始',
 
   DISTRIBUTED_TRANSACTION: '分布式事务',

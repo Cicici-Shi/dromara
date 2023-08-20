@@ -2,7 +2,7 @@ import { ProjectsOption } from './types';
 const enProjectsOption: ProjectsOption = {
   PROJECTS: 'Projects',
   DESCRIPTION:
-    'In Dromara, our projects are the results of our innovation, and we are delighted to share and communicate with you. You can find the works that interest you in our projects and also view our source code on Gitee or GitHub.',
+    'Dromara Open Source Community gathers top-tier open-source project authors, offering open-source products, solutions, consulting, support, and training. Encompassing domains like distributed transactions, tools, authentication, microservice RPC, monitoring, logging, and big data. Join us to experience the joy of open source.',
   START_UP: 'Start up',
   DISTRIBUTED_TRANSACTION: 'Distributed Transaction',
   HMILY_DESC: 'Flexible distributed transaction solution',
