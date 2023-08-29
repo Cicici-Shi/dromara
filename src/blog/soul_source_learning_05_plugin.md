@@ -264,11 +264,11 @@ As you can see, after executing the DividePlugin `doExecute()` method, we alread
 
 How to execute the load balancing of Soul Gateway involves not only various strategies (hasn, random, polling), but also the concept of "weight score". The specific configuration of the management background is as follows:
 
-![](/img/soul/blog1/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ptNDY5NTY4NTk1,size_16,color_FFFFFF,t_70.png)
+待补，文章内部有报错
 
-![](/img/soul/blog1/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ptNDY5NTY4NTk1,size_16,color_FFFFFF,t_70-20210118110416590.png)
+待补，文章内部有报错
 
-![ image-20210118113516468 ](/img/soul/blog1/image-20210118113516468.png)
+待补，文章内部有报错
 
 After showing the background configuration, let's take a look at the code implementation of each strategy.
 

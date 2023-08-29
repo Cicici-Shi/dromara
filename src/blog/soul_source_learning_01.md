@@ -37,8 +37,7 @@ You can compile the project as follows.
 mvn clean package install -Dmaven.test.skip=true -Dmaven.javadoc.skip=true -Drat.skip=true -Dcheckstyle.skip=true
 ```
 
-![-w1723](/img/soul/01/16106054898861.jpg)
-
+待补，文章内部有报错
 ## 2. Startup `soul`
 
 ### 2.1. Startup `soul-admin` module
@@ -47,7 +46,7 @@ mvn clean package install -Dmaven.test.skip=true -Dmaven.javadoc.skip=true -Drat
 
 Choose to use `MySQL` to storage gateway data and modify the datasource config.
 
-![-w1186](/img/soul/01/16106065488032.jpg)
+待补，文章内部有报错
 
 
 Run `org.dromara.soul.admin.SoulAdminBootstrap`.
@@ -56,9 +55,9 @@ When success, please visit the website `http://localhost:9095/`, then jump to th
 
 The user name is `admin` and the password is `123456`.
 
-![-w593](/img/soul/01/16106069731233.jpg)
+待补，文章内部有报错
 
-![-w1262](/img/soul/01/16106073045599.jpg)
+待补，文章内部有报错
 
 
 
@@ -68,7 +67,7 @@ The user name is `admin` and the password is `123456`.
 
 Check the configuration of `soul-bootstrap`.
 
-![-w917](/img/soul/01/16106076385761.jpg)
+待补，文章内部有报错
 
 Please make sure the ip and the port has been configured for `soul-admin`.
 
@@ -121,13 +120,13 @@ If `soul.http.full`=false, you need to add the `@SoulSpringMvcClient` annotation
 
 Visit `http://localhost:8188/test/findByUserId?userId=1` and the result as follows.
 
-![-w684](/img/soul/01/16106235724795.jpg)
+待补，文章内部有报错
 
 #### 3.1.2. Test forward HTTP request
 
 Visit `http://localhost:9195/http/test/findByUserId?userId=1` and the result as follows.
 
-![-w665](/img/soul/01/16106237733891.jpg)
+待补，文章内部有报错
 
 You can see the following information in the console of `soul-bootstrap`. It means the forward HTTP request is successful.
 
@@ -145,23 +144,23 @@ Change the port to `8189`
 
 Startup `soul-examples-http` again
 
-![-w1104](/img/soul/01/16106249542903.jpg)
+待补，文章内部有报错
 
 #### 3.2.1. Test the service
 
 Visit `http://localhost:8189/test/findByUserId?userId=1` and the result as follows.
 
-![-w693](/img/soul/01/16106250513285.jpg)
+待补，文章内部有报错
 
 #### 3.2.2. Test load balance
 
-![-w1096](/img/soul/01/16106266610601.jpg)
+待补，文章内部有报错
 
 Configure two HTTP service in selector
 
 Visit `http://localhost:9195/http/test/findByUserId?userId=1` more and more and result as follows.
 
-![-w595](/img/soul/01/16106267572581.jpg)
+待补，文章内部有报错
 You can see the following information in the console of `soul-bootstrap`. It means the load balance is successful.
 
 ```shell
@@ -219,8 +218,8 @@ Transfer/sec:    390.98KB
 
 When startup the port of `8189`，but the output of console is still `8188`.
 
-![-w1675](/img/soul/01/16106270140398.jpg)
+待补，文章内部有报错
 
 After modify the value of `soul.http.port`, the problem solved.
 
-![-w520](/img/soul/01/16106405075031.jpg)
+待补，文章内部有报错
