@@ -5,8 +5,8 @@ date: 2020-09-08
 tag:
   - hmily
 cover: /assets/img/architecture/hmily-framework.png
-
-comment: false
+head:
+  - name: 新闻
 ---
 
 Hmily 是一款高性能，高可靠，易使用的柔性分布式事务解决方案，目前提供了对 dubbo，spring-cloud，motan，grpc 等 rpc 框架的支持，在易用性上提供零侵入性式的 Spring-Boot, Spring-Namespace 快速集成，目标是打造金融级的一体系分布式事务解决方案。

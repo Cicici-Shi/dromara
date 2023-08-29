@@ -15,35 +15,43 @@ const zhHomeOption: HomeOption = {
   PROJECT_DETAILS: [
     {
       name: 'Hmily',
-      description: '柔性分布式事务解决方案'
+      description: '柔性分布式事务解决方案',
+      url: 'https://dromara.org/zh/projects/hmily/overview/'
     },
     {
       name: 'Hutool',
-      description: '小而全的Java工具类库'
+      description: '小而全的Java工具类库',
+      url: 'https://hutool.cn/'
     },
     {
       name: 'Sa-Token',
-      description: '史上功能最全的 Java 权限认证框架'
+      description: '史上功能最全的 Java 权限认证框架',
+      url: 'http://sa-token.dev33.cn/'
     },
     {
       name: 'Jpom',
-      description: '简而轻的低侵入式在线构建、自动部署、日常运维、项目监控软件'
+      description: '简而轻的低侵入式在线构建、自动部署、日常运维、项目监控软件',
+      url: 'https://jpom.io/'
     },
     {
       name: 'TLog',
-      description: '轻量级的分布式日志标记追踪神器'
+      description: '轻量级的分布式日志标记追踪神器',
+      url: 'https://yomahub.com/tlog/'
     },
     {
       name: 'Cubic',
-      description: '无侵入分布式监控，致力于应用级监控的工具'
+      description: '无侵入分布式监控，致力于应用级监控的工具',
+      url: 'https://cubic.jiagoujishu.com/'
     },
     {
       name: 'Koalas-rpc',
-      description: '高可用可拓展的RPC框架'
+      description: '高可用可拓展的RPC框架',
+      url: 'https://github.com/dromara/koalas-rpc'
     },
     {
       name: 'Fast Request',
-      description: 'IDEA版postman'
+      description: 'IDEA版postman',
+      url: 'https://dromara.org/fast-request'
     }
   ],
   COMMUNITY: '社区动态',

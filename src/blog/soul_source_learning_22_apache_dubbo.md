@@ -1,77 +1,73 @@
 ---
-# 这是文章的标题
-title: 页面配置
-# 这是页面的图标
-icon: file
-# 这是侧边栏的顺序
-order: 1
-# 设置作者
-author: Ms.Hop
-# 设置写作时间
-date: 2020-01-01
-# 一个页面可以有多个分类
+title: Soul Gateway Learning Apache Dubbo Plugin
+author: nuo-promise
+date: 2021-03-23
+tag:
+  - Soul
+cover: /assets/img/blog8/08.jpg
+head:
+  - name: Blog
 ---
 
-## 目标
+## Aim
 
-- Apache Dubbo 插件介绍
-  - 元数据介绍
-- Apache Dubbo 插件配置
-  - Bootstrap pom 配置
-  - soul-admin 配置
-  - dubbo 服务 pom 配置
-- Apache Dubbo 泛化调用介绍
-  - 通过 API 方式使用泛化调用
-  - 通过 spring 使用泛化调用
-  - 泛化调用实现流程
-- Soul Dubbo 插件调用解析
-  - ApachDubboPlugin 泛化调用准备
+- Introduction to the Apache Dubbo Plugin
+  - Introduction to metadata
+- Apache Dubbo Plugin Configuration
+  - Bootstrap POM configuration
+  - Soul-admin Configuration
+  - Dubbo service POM configuration
+- Introduction to Apache Dubbo Generalization Calls
+  - Using Generalization Calls via the API
+  - Using generalized calls with spring
+  - Generalization call implementation flow
+- Soul Dubbo Plugin Call Resolution
+  - ApachDubboPlugin Generalization Call Preparation
   - ApacheDubboProxySerivce
   - DubboResponsePlugin
-  - WebFluxResultUtils 返回结果
-- Dubbo 泛化调用介绍
-- 总结
-- 参考
+  - Web FluxResultUtils returns results
+- Introduction to Dubbo Generalization Calls
+- Sum up
+- Reference
 
-### Apache Dubbo 插件介绍
+### Introduction to the Apache Dubbo Plugin
 
-Apache Dubbo 是一款高性能、轻量级的开源 Java 服务框架,主要提供了六大核心能力,面向接口代理的高性能 RPC 调用,智能容错和负载均衡,服务自动注册与发现,高度可扩展能力,运行期流量调度,可视化的服务治理与运维。
-网关中 Dubbo 插件主要是将 `Http协议`  转换成 `Dubbo协议`  ,也是网关实现 Dubbo 泛化调用的关键。而 Dubbo 插件需要配合 `元数据`  才能实现 Dubbo 调用。
+Apache Dubbo is a high-performance and lightweight open source Java service framework, which mainly provides six core capabilities: high-performance RPC invocation for interface agents, intelligent fault tolerance and load balancing, automatic service registration and discovery, high scalability, run-time traffic scheduling, and visual service governance and operation and maintenance. The Dubbo plug-in in the gateway is mainly used to convert `Http requests` to `Dubbo protocol`, and it is also the key for the gateway to implement Dubbo generalization calls. Dubbo plug-ins need to cooperate `metadata` to implement Dubbo calls.
 
-#### 元数据介绍
+#### Introduction to metadata
 
-元数据作用就是在进行协议转换时候要获取真实的请求 `path` 、`methodName` 、 `parameterTypes`  为泛化调用做好准备
+The function of metadata is to get the real request `path` and `methodName` `parameterTypes` prepare for the generalization call during the protocol conversion.
 
-![image.png](/assets/img/blog8/01.png)
+![](/assets/img/blog8/01.png)
 
-- 在数据库中,我们有一张表单独存储 Dubbo 元信息，通过数据同步方案,会把这张表的数据同步到网关的 JVM 内存中
-- 表结构如下
+- In the database, we have a separate table to store Dubbo meta information. Through the data synchronization scheme, the data of this table will be synchronized to the JVM memory of the gateway
+- The table is structured as follows
 
 ```sql
 CREATE TABLE  IF NOT EXISTS `meta_data` (
 `id` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'id',
-`app_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '应用名称',
-`path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '路径,不能重复',
-`path_desc` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '路径描述',
-`rpc_type` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'rpc类型',
-`service_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '服务名称',
-`method_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '方法名称',
-`parameter_types` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '参数类型 多个参数类型 逗号隔开',
-`rpc_ext` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT 'rpc的扩展信息，json格式',
-`date_created` datetime(0) NOT NULL COMMENT '创建时间',
-`date_updated` datetime(0) NOT NULL ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '更新时间',
-`enabled` tinyint(4) NOT NULL DEFAULT 0 COMMENT '启用状态',
+`app_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Application Name',
+`path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Path, should be unique',
+`path_desc` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Path description',
+`rpc_type` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'RPC type',
+`service_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT 'Service Name',
+`method_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT 'Method Name',
+`parameter_types` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT 'Parameter Types, comma-separated',
+`rpc_ext` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT 'RPC extension information in JSON format',
+`date_created` datetime(0) NOT NULL COMMENT 'Creation Time',
+`date_updated` datetime(0) NOT NULL ON UPDATE CURRENT_TIMESTAMP(0) COMMENT 'Update Time',
+`enabled` tinyint(4) NOT NULL DEFAULT 0 COMMENT 'Enable State',
 PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 ```
 
-- `path`  字段主要是在请求网关的时候,会根据你的 `path`  字段来匹配到一条数据,然后进行后续的处理流程
-- `rpc_ext`  字段如果代理的接口是 `Dubbo` 类型的服务接口,同时设置了 `group` `version`  字段时候,那么信息就会存储到 `rpc_ext`  中
-- 每一个 `Dubbo`  接口方法会应对一条元数据,对比 SpringCloud、http 分别是只存储一条/contextPath/\*\* 和不存储
+- The `path` field is mainly used to match a piece of data according to your `path` field when requesting the gateway, and then carry out the subsequent processing process.
+- `rpc_ext` Field If the proxy interface is a `Dubbo` service interface of type and the field is set `group` `version`, the information will be stored `rpc_ext` in
+- Each `Dubbo` interface method will deal with a piece of metadata. Compared with Spring Cloud and HTTP, only one piece of/contextPath/\ \*\* is stored and none is stored respectively.
 
-### Apache Dubbo 插件配置
+### Apache Dubbo Plugin Configuration
 
-#### soul-bootstrap pom 配置
+#### Soul-bootstrap POM configuration
 
 ```java
 <dependency>
@@ -101,13 +97,13 @@ PRIMARY KEY (`id`) USING BTREE
 </dependency>
 ```
 
-#### soul-admin 配置
+#### Soul-admin Configuration
 
-![image.png](/assets/img/blog8/02.png)
+![](/assets/img/blog8/02.png)
 
-> 登录 soul-admin 后台在插件管理页面打开 Dubbo 配置选项的开关,和填写注册中心的连接地址
+> Log in to soul-admin background, open the switch of Dubbo configuration option on the plug-in management page, and fill in the connection address of the registry.
 
-#### dubbo 服务 pom 配置
+#### Dubbo service POM configuration
 
 ```java
 <dependency>
@@ -125,13 +121,13 @@ public DubboTest insert(final DubboTest dubboTest) {
 }
 ```
 
-> 被代理的服务使用提供的 `soul-spring-boot-starter-client-apache-dubbo`  客户端依赖,同时使用`@SoulDubboClient`  注解,在启动时候将接口的名称,参数类型,参数内容注册到 `soul-admin`  端,然后 `admin`  端将数据同步到 `bootstrap`  端。
+> The proxied service uses the `soul-spring-boot-starter-client-apache-dubbo` provided client dependencies and `@SoulDubboClient` annotations to register the interface name, parameter type, and parameter content to the `soul-admin` end at startup, and then the backend `admin` synchronizes the data to the `bootstrap` end.
 
-### Apache Dubbo 泛化调用介绍
+### Introduction to Apache Dubbo Generalization Calls
 
-泛化接口调用方式主要用于客户端没有 API 接口及模型类元的情况,参数及返回值中的所有 POJO 均用 `Map`  表示, 通常用于框架集成,可通过 GenericSerivce 调用所有服务实现。
+The generalized interface calling mode is mainly used when the client does not have an API interface and a model class element. All POJOs in the parameters and return values are represented by `Map`. It is usually used for framework integration and can be implemented by calling all services through GenericS.
 
-#### 通过 API 方式使用泛化调用(网关目前使用方式)
+#### Using generalized calls through the API (the way the gateway is currently used)
 
 ```java
 ReferenceConfig<GenericService> reference = new ReferenceConfig<>();
@@ -142,15 +138,15 @@ reference.setInterface(metaData.getServiceName());
 reference.setProtocol("dubbo");
 ```
 
-> 网关通过 API 方式声明注册使用泛化调用
+> The gateway uses the generic call through API declaration and registration.
 
-#### 通过 Spring 使用泛化调用
+#### Using Generalization Calls with Spring
 
 ```java
 <dubbo:reference id="barService" interface="com.foo.BarService" generic="true" />
 ```
 
-#### 泛化调用实现流程
+#### Generalization call implementation flow
 
 ```java
 +-------------------------------------------+               +-------------------------------------------+
@@ -180,17 +176,17 @@ reference.setProtocol("dubbo");
 +-------------------------------------------+               +-------------------------------------------+
 ```
 
-> `GenericService`  这个接口和 Java 的反射调用非常像,只需提供调用的方法名称,参数的类型以及参数的值就可以直接调用对应方法了。
+> `GenericService` This interface is very similar to Java's reflection call. You only need to provide the name of the method called, the type of the parameter, and the value of the parameter to call the corresponding method directly.
 >
-> - GenericFilter : 负责 provider 端参数的转换
->   - 调用时,将 hashMap 结构的参数转换成对应 Pojo
->   - 返回结果是,将 Pojo 转换成 hashMap
+> - Generic Filter: responsible for the conversion of provider-side parameters
+>   - Converts the parameters of the hashMap structure to the corresponding Pojo when called
+>   - The return result is to convert Pojo to hashMap.
 >
-> ![image.png](/assets/img/blog8/03.png)
+> ![](/assets/img/blog8/03.png)
 >
-> - GenericImplFilter : 负责 consumer 端参数的转换,将 Pojo 转换成 hashMap 接口
+> - GenericImpl Filter: It is responsible for the conversion of consumer side parameters and converting Pojo to hashMap interface.
 >
-> ![image.png](/assets/img/blog8/04.png)
+> ![](/assets/img/blog8/04.png)
 
 ```java
 /**
@@ -203,11 +199,11 @@ public interface GenericService {
     /**
      * Generic invocation
      *
-     * @param method         方法名，如：findPerson，如果有重载方法，需带上参数列表，如：findPerson(java.lang.String)
-     * @param parameterTypes 参数类型
-     * @param args           参数列表
-     * @return invocation 返回值
-     * @throws GenericException 方法抛出的异常
+     * @param method         Method name, e.g., findPerson. If there are overloaded methods, include the parameter list, e.g., findPerson(java.lang.String)
+     * @param parameterTypes Parameter types
+     * @param args           Parameter list
+     * @return invocation result
+     * @throws GenericException Exception thrown by the method
      */
     Object $invoke(String method, String[] parameterTypes, Object[] args) throws GenericException;
 
@@ -222,9 +218,9 @@ public interface GenericService {
 }
 ```
 
-### Soul Dubbo 插件调用解析
+### Soul Dubbo Plugin Call Resolution
 
-当业务请求发起时候,首先进入 `SoulWebHandler` (至于为什么成为请求入口自行查询,本文不作解释)  类的 `Handle`  方法,下面就带了 `plugins`  从 `DefaultSoulPluginChain`  类开始进入插件链调用。
+When a service request is initiated, the method of the `Handle` class is entered `SoulWebHandler` first (as to why it becomes the request entry to query by itself, this article will not explain). The following is the `plugins` plug-in chain call from `DefaultSoulPluginChain` the class.
 
 ```java
 @Override
@@ -236,13 +232,13 @@ public interface GenericService {
 ```java
 @Override
 public Mono<Void> execute(final ServerWebExchange exchange) {
-    // 响应式编程
+    // Reactive programming
     return Mono.defer(() -> {
-        // 判断当前index 是否 < 插件数量
+        // Check if the current index is less than the number of plugins
         if (this.index < plugins.size()) {
-            // 依次从plugins 中获取一种插件进行调用
+            // Get a plugin from plugins one by one
             SoulPlugin plugin = plugins.get(this.index++);
-            // 判断此插件是否未打开
+            // Check if this plugin should be skipped
             Boolean skip = plugin.skip(exchange);
             if (skip) {
                 return this.execute(exchange);
@@ -254,23 +250,23 @@ public Mono<Void> execute(final ServerWebExchange exchange) {
 }
 ```
 
-> 本章只关注 Apache Dubbo 所以我们重点放到 Dubbo 插件的调用。
-> ![image.png](/assets/img/blog8/05.png)
-> 经过 Debug 网关程序我们知道其实是按照上面的顺序一个一个的进行判断调用。下面我们关注 `ApacheDubboPlugin`
+> This chapter focuses only on Apache Dubbo, so we'll focus on the invocation of the Dubbo plug-in.
+> ![](/assets/img/blog8/05.png)
+> Through the Debug gateway program, we know that it is actually judged and called one by one according to the above order. Let's focus on `ApacheDubboPlugin`
 
-#### ApachDubboPlugin 泛化调用准备
+#### ApachDubboPlugin Generalization Call Preparation
 
 ```java
 @Override
     protected Mono<Void> doExecute(final ServerWebExchange exchange, final SoulPluginChain chain, final SelectorData selector, final RuleData rule) {
-        // 获取 dubbo_params 数据
+        // Get dubbo_params data
         String body = exchange.getAttribute(Constants.DUBBO_PARAMS);
-        // 获取 exchange context的属性值
+        // Get attribute value from exchange context
         SoulContext soulContext = exchange.getAttribute(Constants.CONTEXT);
         assert soulContext != null;
-        // 获取 exchange metaData 属性值
+        // Get attribute value from exchange metaData
         MetaData metaData = exchange.getAttribute(Constants.META_DATA);
-        // 判断metaData是否有误,如果有误直接返回 metaData 有误的返回信息
+        // Check if metaData is incorrect, if so, return an error response
         if (!checkMetaData(metaData)) {
             assert metaData != null;
             log.error(" path is :{}, meta data have error.... {}", soulContext.getPath(), metaData.toString());
@@ -278,19 +274,19 @@ public Mono<Void> execute(final ServerWebExchange exchange) {
             Object error = SoulResultWrap.error(SoulResultEnum.META_DATA_ERROR.getCode(), SoulResultEnum.META_DATA_ERROR.getMsg(), null);
             return WebFluxResultUtils.result(exchange, error);
         }
-        // 判断 metaData的parameterTypes 和 body 是否为空,如果有误则返回Body错误信息
+        // Check if parameterTypes and body in metaData are empty, if so, return a body error response
         if (StringUtils.isNoneBlank(metaData.getParameterTypes()) && StringUtils.isBlank(body)) {
             exchange.getResponse().setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR);
             Object error = SoulResultWrap.error(SoulResultEnum.DUBBO_HAVE_BODY_PARAM.getCode(), SoulResultEnum.DUBBO_HAVE_BODY_PARAM.getMsg(), null);
             return WebFluxResultUtils.result(exchange, error);
         }
-        // 带着exchange、body、metaData 进行 Dubbo GenericsService的异步调用
+        // Perform asynchronous call to Dubbo GenericsService with exchange, body, and metaData
         final Mono<Object> result = dubboProxyService.genericInvoker(body, metaData, exchange);
         return result.then(chain.execute(exchange));
     }
 ```
 
-> 首先对泛化调用所需要的参数进行检查
+> First, check the parameters required by the generalization call.
 
 #### ApacheDubboProxyService
 
@@ -301,28 +297,28 @@ public Mono<Object> genericInvoker(final String body, final MetaData metaData, f
     if (StringUtils.isNotBlank(dubboTagRouteFromHttpHeaders)) {
         RpcContext.getContext().setAttachment(CommonConstants.TAG_KEY, dubboTagRouteFromHttpHeaders);
     }
-    // 根据metaData路径获取ferference
+    // Get reference based on metaData path
     ReferenceConfig<GenericService> reference = ApplicationConfigCache.getInstance().get(metaData.getPath());
     if (Objects.isNull(reference) || StringUtils.isEmpty(reference.getInterface())) {
         ApplicationConfigCache.getInstance().invalidate(metaData.getPath());
         reference = ApplicationConfigCache.getInstance().initRef(metaData);
     }
-    // 根据ferference 获取泛化调用的实例 GenericService
+    // et the instance of GenericService for generic invocation based on reference
     GenericService genericService = reference.get();
     Pair<String[], Object[]> pair;
     if (ParamCheckUtils.dubboBodyIsEmpty(body)) {
         pair = new ImmutablePair<>(new String[]{}, new Object[]{});
     } else {
-        // 根据body 和 parameterTypes 组织Dubbo 泛化调用的参数类型和参数值
+        // Organize parameter types and values for Dubbo generic invocation based on body and parameterTypes
         pair = dubboParamResolveService.buildParameter(body, metaData.getParameterTypes());
     }
-    // 下面使用GenericSerice 默认方法$invokeAsync进行异步调用
+    // Perform asynchronous call using the default $invokeAsync method of GenericService
     CompletableFuture<Object> future = genericService.$invokeAsync(metaData.getMethodName(), pair.getLeft(), pair.getRight());
     return Mono.fromFuture(future.thenApply(ret -> {
         if (Objects.isNull(ret)) {
             ret = Constants.DUBBO_RPC_RESULT_EMPTY;
         }
-        // 等调用成功之后 将结果和类型复制到exchagne 对应的属性上
+        // After successful invocation, copy the result and type to attributes of the exchange
         exchange.getAttributes().put(Constants.DUBBO_RPC_RESULT, ret);
         exchange.getAttributes().put(Constants.CLIENT_RESPONSE_RESULT_TYPE, ResultEnum.SUCCESS.getName());
         return ret;
@@ -347,36 +343,36 @@ public Mono<Void> execute(final ServerWebExchange exchange, final SoulPluginChai
 }
 ```
 
-#### ![image.png](/assets/img/blog8/06.png)
+#### ![](/assets/img/blog8/06.png)
 
-#### WebFluxResultUtils 返回结果
+#### Web FluxResultUtils returns results
 
-![image.png](/assets/img/blog8/07.png)
+![](/assets/img/blog8/07.png)
 
-### Dubbo 泛化调用介绍
+### Introduction to Dubbo Generalization Calls
 
-Dubbo 泛化调用主要就分为两块分别是消费端如何使用 `GenericImplFilter`  拦截泛化调用、服务提供端如何使用 `GenericFilter`  拦截请求后把泛化参数序列化然后请求给具体服务。
+Dubbo generalized invocation is mainly divided into two parts, namely, how to use `GenericImplFilter` the consumer side to intercept the generalized invocation, and how to use `GenericFilter` the service provider side to serialize the generalized parameters after intercepting the request and then request the specific service.
 
-#### 服务消费端 org.apache.dubbo.rpc.filter.GenericImplFilter 是如何拦截泛化调用
+#### How does the service consumer org. Apache. Dubbo. RPC. Filter. GenericImplFilter intercept generalized calls?
 
 ```java
 @Activate(group = CommonConstants.CONSUMER, value = GENERIC_KEY, order = 20000)
 public class GenericImplFilter implements Filter, Filter.Listener {
 @Override
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
-        // ... 省略非核心代码
-        // 判断是否为泛化调用
+        // ... Omitted non-core code
+        //  Check if it's a generic call
         if (isMakingGenericCall(generic, invocation)) {
-            // 获取泛化参数
+            // Get the generic parameters
             Object[] args = (Object[]) invocation.getArguments()[2];
-            // 如果泛化为nativeJava
+            // If it's nativeJava mode
             if (ProtocolUtils.isJavaGenericSerialization(generic)) {
                 for (Object arg : args) {
                     if (!(byte[].class == arg.getClass())) {
                         error(generic, byte[].class.getName(), arg.getClass().getName());
                     }
                 }
-                // 如果泛化方式为bean
+                // If it's bean mode
             } else if (ProtocolUtils.isBeanGenericSerialization(generic)) {
                 for (Object arg : args) {
                     if (!(arg instanceof JavaBeanDescriptor)) {
@@ -385,11 +381,11 @@ public class GenericImplFilter implements Filter, Filter.Listener {
                 }
             }
 
-            // 设置attachment ,以便与服务端调用
+            // Set attachment for server-side invocation
             invocation.setAttachment(
                     GENERIC_KEY, invoker.getUrl().getParameter(GENERIC_KEY));
         }
-        // 发起远程调用
+        // Perform remote invocation
         return invoker.invoke(invocation);
     }
     private boolean isMakingGenericCall(String generic, Invocation invocation) {
@@ -401,47 +397,47 @@ public class GenericImplFilter implements Filter, Filter.Listener {
 }
 ```
 
-> GenericImplFilter 实现接口 Filter(关于 Dubbo 中的 Filter,不做介绍)然后执行 Invoke 方法,invoke 方法主要做如下事情:
+> GenericImpl Filter implements the interface Filter (I will not introduce the Filter in Dubbo) and then executes the Invoke method. The invoke method mainly does the following things:
 >
-> - 参数校验,检查这个调用是否是泛化调用
-> - 获取泛化参数
-> - 判断泛化调用方式:遍历每个参数,然后依次判断参数的泛化方式是 nativejava 还是 bean 方式
-> - 发起远程调用
+> - Parameter validation to check whether the call is a generalized call
+> - Get the generalization parameters
+> - Determine the generalization calling mode: traverse each parameter, and then determine whether the generalization mode of the parameter is native Java or bean in turn
+> - Initiates a remote call
 
-#### 服务提供端通过 GenericFilter 拦截泛化请求
+#### The service provider intercepts the generalization request through Generic Filter.
 
 ```java
 @Activate(group = CommonConstants.PROVIDER, order = -20000)
 public class GenericFilter implements Filter, Filter.Listener {
     @Override
     public Result invoke(Invoker<?> invoker, Invocation inv) throws RpcException {
-        // 参数校验
+        // Parameter validation
         if ((inv.getMethodName().equals($INVOKE) || inv.getMethodName().equals($INVOKE_ASYNC))
                 && inv.getArguments() != null
                 && inv.getArguments().length == 3
                 && !GenericService.class.isAssignableFrom(invoker.getInterface())) {
-            // 获取参数名称、参数类型、参数值
+            // Get parameter name, type, and value
             String name = ((String) inv.getArguments()[0]).trim();
             String[] types = (String[]) inv.getArguments()[1];
             Object[] args = (Object[]) inv.getArguments()[2];
             try {
-                // 使用反射获取调用的方法
+                // Get the called method using reflection
                 Method method = ReflectUtils.findMethodByMethodSignature(invoker.getInterface(), name, types);
                 Class<?>[] params = method.getParameterTypes();
                 if (args == null) {
                     args = new Object[params.length];
                 }
-                // 获取泛化引用使用的泛化类型,true or bean or nativejava
+                // Get the generic type used for the generic reference, true or bean or nativejava
                 String generic = inv.getAttachment(GENERIC_KEY);
                 if (StringUtils.isBlank(generic)) {
                     generic = RpcContext.getContext().getAttachment(GENERIC_KEY);
                 }
-                // 如果generic=true 则使用true方式对入参进行反序列化
+                // If generic=true, deserialize parameters using the true method
                 if (StringUtils.isEmpty(generic)
                         || ProtocolUtils.isDefaultGenericSerialization(generic)
                         || ProtocolUtils.isGenericReturnRawResult(generic)) {
                     args = PojoUtils.realize(args, params, method.getGenericParameterTypes());
-                    // 如果 generic=nativejava,则使用nativejava方式对入参进行反序列化
+                    // If generic=nativejava, deserialize parameters using the nativejava method
                 } else if (ProtocolUtils.isJavaGenericSerialization(generic)) {
                     for (int i = 0; i < args.length; i++) {
                         if (byte[].class == args[i].getClass()) {
@@ -456,7 +452,7 @@ public class GenericFilter implements Filter, Filter.Listener {
                             throw new RpcException(...);
                         }
                     }
-                    // 如果 generic=bean 则使用bean方式对入参进行反序列化
+                    // If generic=bean, deserialize parameters using the bean method
                 } else if (ProtocolUtils.isBeanGenericSerialization(generic)) {
                     for (int i = 0; i < args.length; i++) {
                         if (args[i] instanceof JavaBeanDescriptor) {
@@ -466,7 +462,7 @@ public class GenericFilter implements Filter, Filter.Listener {
                         }
                     }
                 } ...
-                // 将本次请求传递到FilterChain的下一个Filter中,并返回结果result
+                // Pass the current request to the next Filter in the FilterChain and return the result
                 RpcInvocation rpcInvocation = new RpcInvocation(method, invoker.getInterface().getName(), args, inv.getAttachments(), inv.getAttributes());
                 rpcInvocation.setInvoker(inv.getInvoker());
                 rpcInvocation.setTargetServiceUniqueName(inv.getTargetServiceUniqueName());
@@ -478,26 +474,26 @@ public class GenericFilter implements Filter, Filter.Listener {
                 throw new RpcException(e.getMessage(), e);
             }
         }
-        // 如果不是泛化调用,直接把请求传给FilterChain的下一个Filter
+        // If it's not a generic call, pass the request directly to the next Filter in the FilterChain
         return invoker.invoke(inv);
     }
 }
 ```
 
-> 以上就是 Dubbo 服务提供端如何拦截泛化请求,并进行处理的大体流程:
+> The above is the general process of how the Dubbo service provider intercepts the generalization request and processes it:
 >
-> - 参数校验,判断此次请求是不是泛化调用
-> - 获取参数名称、参数类型、参数值
-> - 使用反射获取调用的方法,和使用的泛化方式 `true`  or `nativejava`  or `bean`
-> - 根据泛化方式,反序列化泛化参数
-> - 将本次请求，包括调用的方法，参数和上下文信息传递给 FilterChain 的下一个 Filter 中,并返回 Result 结果
-> - 根据泛化方式,反序列化 Result 结果返回给服务消费端
+> - Parameter check to determine whether the request is a generalized call
+> - Get the parameter name, parameter type, parameter value,
+> - Use reflection to get the method called, and the generalization used `true` or or
+> - Deserialize the generalization parameters based on the generalization method
+> - Pass the request, including the called method, parameters and context information, to the next Filter in the FilterChain, and return the Result
+> - According to the generalization method, deserialize the Result and return it to the service consumer
 
-### 总结
+### Sum up
 
-以上从如何配置 Dubbo 插件到整个调用流程的分析,然后分别介绍服务消费端与服务提供端如何拦截泛化调用流程对参数进行序列化细节,希望对你有所帮助
+The above is the analysis of how to configure the Dubbo plug-in to the entire call process, and then respectively introduce the details of how the service consumer and service provider intercept the generalized call process and serialize the parameters. I hope it will be helpful to you.
 
-### 参考
+### Reference
 
 [https://my.oschina.net/u/4564034/blog/4409382](https://my.oschina.net/u/4564034/blog/4409382)
 

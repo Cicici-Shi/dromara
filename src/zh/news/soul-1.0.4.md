@@ -5,8 +5,8 @@ date: 2019-04-09
 tag:
   - Soul
 cover: /assets/img/architecture/soul-framework.png
-
-comment: false
+head:
+  - name: 新闻
 ---
 
 ### Soul 网关发布 1.0.4-RELEASE 版本

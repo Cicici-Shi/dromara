@@ -1,14 +1,14 @@
 ---
 title: Dromara Soul 源码01期阅读分享会02
 author: xiaoyu
-date: 2021-02-06T15:00:00.000Z
+date: 2021-02-06
 tag:
   - Soul
   - Dromara
   - Reactor
 cover: /assets/img/activities/dromara-open-soul-03.jpg
-
-comment: false
+head:
+  - name: 活动
 ---
 
 ![Dromara 线上活动](/assets/img/activite/soul-xmind.png)

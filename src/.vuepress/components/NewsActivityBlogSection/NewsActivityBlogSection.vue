@@ -7,8 +7,7 @@
       </div>
     </div>
     <main class="news-activity-blog-main">
-      <h2 class="tag">{{ getTag }}</h2>
-
+      <h2 class="tag">{{ langMapping === '中文' ? '标签' : 'Tag' }}</h2>
       <div class="buttons">
         <div v-for="item in TAGS" :key="item">
           <button
@@ -19,27 +18,29 @@
           </button>
         </div>
       </div>
-      <div class="cards">
-        <div v-for="obj in option.CARDS" :key="obj.name" class="card">
-          <img class="cover" :src="obj.cover" :alt="obj.name" />
-          <div class="tag-items">
-            <div v-for="tag in obj.tags" :key="tag" class="tag-item">
-              #{{ tag }}
+      <div class="cards" style="position: relative">
+        <template v-if="filteredSectionDetail.length">
+          <div
+            v-for="obj in filteredSectionDetail"
+            :key="obj.title"
+            class="card"
+          >
+            <div class="tag-items">
+              <div v-for="tag in obj.tag" :key="tag" class="tag-item">
+                #{{ tag }}
+              </div>
             </div>
-          </div>
-          <a class="title">{{ obj.name }}</a>
-          <p class="desc">{{ obj.desc }}</p>
-          <div class="author">
-            <img
-              class="avatar"
-              :src="`https://www.github.com/${obj.github_name}.png`"
-              :alt="obj.github_name"
-            />
+            <img class="cover" :src="obj.cover" :alt="obj.title" />
+
+            <a class="title" :href="obj.url">{{ obj.title }}</a>
             <div class="author-info">
-              <div class="author-name">{{ obj.author_name }}</div>
-              <div class="time">{{ obj.time }}</div>
+              <div class="author-name">{{ obj.author }}</div>
+              <div class="time">{{ obj.date }}</div>
             </div>
-          </div>
+          </div></template
+        >
+        <div v-else class="no-data">
+          {{ langMapping === '中文' ? '暂无数据' : 'Not found' }}
         </div>
       </div>
     </main>
@@ -47,7 +48,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, watchEffect } from 'vue';
+import { ref, reactive, watchEffect, computed } from 'vue';
 import { type ActivityOption } from './types';
 
 import enActivityOption from './enActivity';
@@ -56,6 +57,9 @@ import enNewsOption from './enNews';
 import zhActivityOption from './zhActivity';
 import zhBlogOption from './zhBlog';
 import zhNewsOption from './zhNews';
+import { siteData } from '@vuepress/client';
+
+const allPagesFrontmatter = siteData.value.frontmatter;
 
 const props = defineProps({
   title: String
@@ -66,22 +70,29 @@ let option: ActivityOption = reactive({
   CARDS: []
 });
 
-const tag = ref('Tag');
+const currentLang = ref('zh');
 const currentTag = ref('All');
+let sectionDetail = reactive([]);
+// type TagMapping = Record<string, 'Tag' | '标签'>;
 
-type TagMapping = Record<string, 'Tag' | '标签'>;
+// function getTag(input: string): 'Tag' | '标签' {
+//   const tagMapping: TagMapping = {
+//     News: 'Tag',
+//     Activity: 'Tag',
+//     Blog: 'Tag',
+//     新闻: '标签',
+//     活动: '标签',
+//     博客: '标签'
+//   };
+//   return tagMapping[input] ?? 'Tag';
+// }
 
-function getTag (input: string): 'Tag' | '标签' {
-  const tagMapping: TagMapping = {
-    News: 'Tag',
-    Activity: 'Tag',
-    Blog: 'Tag',
-    新闻: '标签',
-    活动: '标签',
-    博客: '标签'
-  };
-  return (input !== '' && input !== undefined && tagMapping[input]) ?? 'Tag';
-}
+// const getTag = (input) => {
+//   return getLang(input) === '中文' ? '标签' : 'Tag';
+// };
+// const getNoData = (input) => {
+//   return getLang(input) === '中文' ? '标签' : 'Tag';
+// };
 const options = {
   News: enNewsOption,
   新闻: zhNewsOption,
@@ -90,29 +101,106 @@ const options = {
   Blog: enBlogOption,
   博客: zhBlogOption
 };
-watchEffect(() => {
-  if (props.title !== undefined) {
-    option = options[props.title as keyof typeof options];
-    tag.value = getTag(props.title);
-  }
-});
+// 初始化分组对象
+const groupedPages = {
+  新闻: [],
+  News: [],
+  博客: [],
+  Blog: [],
+  活动: [],
+  Activity: []
+};
 
+// 遍历所有页面的 frontmatter
+for (const frontmatter of allPagesFrontmatter) {
+  // 确保 frontmatter 有 head 属性
+  if (frontmatter.head && frontmatter.head.length > 0) {
+    const headName = frontmatter.head[0].name; // 假设 head 是一个数组，取第一个元素的 name 属性作为标识
+    // 如果是新闻、博客或活动，则添加到相应的数组中
+    if (groupedPages[headName] !== undefined) {
+      groupedPages[headName].push({
+        cover: frontmatter.cover,
+        tag: frontmatter.tag,
+        title: frontmatter.title,
+        url: extractPathFromURL(
+          frontmatter.head.flat().find((item) => item.property === 'og:url')
+            .content
+        ),
+        author: frontmatter.author,
+        date: formatDate(frontmatter.date)
+      });
+    }
+  }
+}
+for (const key in groupedPages) {
+  if (groupedPages.hasOwnProperty(key)) {
+    groupedPages[key].sort((a, b) => new Date(b.date) - new Date(a.date));
+  }
+}
+// 最终得到按照 head 分组的对象，只包含新闻、博客、活动三种 head
+console.log(groupedPages);
+function extractPathFromURL(url) {
+  const match = url.match(/\/([^/]+\.html)$/);
+
+  // 如果匹配成功，返回匹配到的部分
+  if (match && match[1]) {
+    return match[1];
+  } else {
+    return null; // 或者根据需要返回一个默认值或错误提示
+  }
+}
 const TAGS = [
   'All',
   'DreamCode',
   'Dromara',
   'GateWay',
-  'himly',
+  'hmily',
   'Reactor',
   'Soul',
   'TCC'
 ];
+watchEffect(() => {
+  if (props.title !== undefined) {
+    option = options[props.title as keyof typeof options];
+    // tag.value = getTag(props.title);
+    sectionDetail = groupedPages[props.title];
+    console.log(groupedPages);
+  }
+});
+type LangMapping = Record<string, '英文' | '中文'>;
+
+const langMapping = computed(() => {
+  const mapping: LangMapping = {
+    News: '英文',
+    Activity: '英文',
+    Blog: '英文',
+    新闻: '中文',
+    活动: '中文',
+    博客: '中文'
+  };
+  return mapping[props.title] ?? '中文';
+});
+function formatDate(inputDate) {
+  const date = new Date(inputDate);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
+}
+const filteredSectionDetail = computed(() => {
+  if (currentTag.value === 'All') {
+    return sectionDetail;
+  } else {
+    return sectionDetail.filter((obj) => obj.tag.includes(currentTag.value));
+  }
+});
 </script>
 
 <style scoped lang="scss">
 .news-activity-blog-section {
   padding-top: var(--navbar-height);
-  min-width: 600px;
+  min-width: 320px;
   .bg-white {
     background-color: #f9fbff;
   }
@@ -190,14 +278,21 @@ const TAGS = [
       grid-template-columns: repeat(3, 1fr);
     }
   }
+  .no-data {
+    font-size: 32px;
+    color: #2c3e50;
+    font-weight: bold;
+    position: absolute;
+    right: 50%;
+  }
   .card {
-    display: flex;
     padding: 16px;
-    flex-direction: column;
-    justify-content: space-between;
-    gap: 16px;
     border-radius: 8px;
     background: #fff;
+    display: grid;
+    grid-template-rows: auto;
+    grid-template-columns: 1fr;
+    gap: 16px;
   }
   .cover {
     height: 190px;
@@ -209,7 +304,8 @@ const TAGS = [
     display: flex;
     gap: 10px;
     color: #2d74ff;
-    font-size: 14px;
+    font-size: 17px;
+    font-weight: 600;
   }
   .title {
     color: #3e3232;

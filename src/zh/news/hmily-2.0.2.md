@@ -1,12 +1,12 @@
 ---
 title: Hmily发布2.0.2-RELEASE版本
 author: xiaoyu
-tags:
+tag:
   - hmily
 date: 2019-04-05
 cover: /assets/img/architecture/hmily-framework.png
-
-comment: false
+head:
+  - name: 新闻
 ---
 
 ## Hmily 发布 2.0.2-RELEASE 版本

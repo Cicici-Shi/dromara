@@ -2,11 +2,11 @@
 title: 【Soul网关发布2.2.0】让高性能网关变得如此简单！
 author: xiaoyu
 tag:
-  - Souldate: 2020-06-17
+  - Soul
 date: 2020-06-17
 cover: /assets/img/architecture/soul-framework.png
-
-comment: false
+head:
+  - name: 新闻
 ---
 
 我们还是先来看看新增功能，然后再讲故事。

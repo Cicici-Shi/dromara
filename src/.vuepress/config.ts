@@ -1,90 +1,82 @@
-import { getDirname, path } from "@vuepress/utils";
-import { defineUserConfig } from "vuepress";
-import theme from "./theme.js";
-import { hopeTheme } from "vuepress-theme-hope";
-import { searchProPlugin } from "vuepress-plugin-search-pro";
-import { enNavbar, zhNavbar } from "./navbar/index.js";
-import { enSidebar, zhSidebar } from "./sidebar/index.js";
+import { getDirname, path } from '@vuepress/utils';
+import { defineUserConfig } from 'vuepress';
+import theme from './theme.js';
+import { hopeTheme } from 'vuepress-theme-hope';
+import { searchProPlugin } from 'vuepress-plugin-search-pro';
+import { enNavbar, zhNavbar } from './navbar/index.js';
+import { enSidebar, zhSidebar } from './sidebar/index.js';
 
 const __dirname = getDirname(import.meta.url);
 
 export default defineUserConfig({
-  base: "/",
+  base: '/',
 
   locales: {
-    "/": {
-      lang: "en-US",
-      description: "A official website for dromara",
+    '/': {
+      lang: 'en-US',
+      description: 'A official website for dromara'
     },
-    "/zh/": {
-      lang: "zh-CN",
-      description: "dromara的官网文档",
-    },
+    '/zh/': {
+      lang: 'zh-CN',
+      description: 'dromara的官网文档'
+    }
   },
   // theme,
   theme: hopeTheme(
     {
-      hostname: "https://vuepress-theme-hope-docs-demo.netlify.app",
+      hostname: 'https://vuepress-theme-hope-docs-demo.netlify.app',
       breadcrumb: false,
       editLink: false,
-      darkmode: "disable",
+      darkmode: 'disable',
 
-      iconAssets: "fontawesome-with-brands",
+      iconAssets: 'fontawesome-with-brands',
 
-      logo: "/logo.svg",
+      logo: '/logo.svg',
 
-      repo: "vuepress-theme-hope/vuepress-theme-hope",
+      repo: 'vuepress-theme-hope/vuepress-theme-hope',
 
-      docsDir: "src",
+      docsDir: 'src',
 
       locales: {
-        "/": {
+        '/': {
           // navbar
           navbar: enNavbar,
 
           // sidebar
           sidebar: enSidebar,
 
-          footer: "Default footer",
+          footer: 'Default footer',
 
           displayFooter: true,
 
           metaLocales: {
-            editLink: "Edit this page on GitHub",
-          },
+            editLink: 'Edit this page on GitHub'
+          }
         },
 
         /**
          * Chinese locale config
          */
-        "/zh/": {
+        '/zh/': {
           // navbar
           navbar: zhNavbar,
 
           // sidebar
           sidebar: zhSidebar,
 
-          footer: "默认页脚",
+          footer: '默认页脚',
 
           displayFooter: true,
 
           // page meta
           metaLocales: {
-            editLink: "在 GitHub 上编辑此页",
-          },
-        },
+            editLink: '在 GitHub 上编辑此页'
+          }
+        }
       },
 
       plugins: {
-        // You should generate and use your own comment service
-        comment: {
-          provider: "Giscus",
-          repo: "vuepress-theme-hope/giscus-discussions",
-          repoId: "R_kgDOG_Pt2A",
-          category: "Announcements",
-          categoryId: "DIC_kwDOG_Pt2M4COD69",
-        },
-
+        photoSwipe: false,
         // All features are enabled for demo, only preserve features you need here
         mdEnhance: {
           align: true,
@@ -103,59 +95,59 @@ export default defineUserConfig({
           mark: true,
           mermaid: true,
           playground: {
-            presets: ["ts", "vue"],
+            presets: ['ts', 'vue']
           },
-          presentation: ["highlight", "math", "search", "notes", "zoom"],
+          presentation: ['highlight', 'math', 'search', 'notes', 'zoom'],
           stylize: [
             {
-              matcher: "Recommended",
+              matcher: 'Recommended',
               replacer: ({ tag }) => {
-                if (tag === "em")
+                if (tag === 'em')
                   return {
-                    tag: "Badge",
-                    attrs: { type: "tip" },
-                    content: "Recommended",
+                    tag: 'Badge',
+                    attrs: { type: 'tip' },
+                    content: 'Recommended'
                   };
-              },
-            },
+              }
+            }
           ],
           sub: true,
           sup: true,
           tabs: true,
           vPre: true,
-          vuePlayground: true,
-        },
+          vuePlayground: true
+        }
       },
-      sidebarSorter: ["date-desc"],
-      blog: { name: "dromara" },
+      sidebarSorter: ['date-desc'],
+      blog: { name: 'dromara' }
     },
     { custom: true }
   ),
   alias: {
     // 你可以在这里将别名定向到自己的组件
-    "@theme-hope/components/HomePage": path.resolve(
+    '@theme-hope/components/HomePage': path.resolve(
       __dirname,
-      "./components/HomePage/HomePage.vue"
+      './components/HomePage/HomePage.vue'
     ),
-    "@theme-hope/components/PageFooter": path.resolve(
+    '@theme-hope/components/PageFooter': path.resolve(
       __dirname,
-      "./components/PageFooter/PageFooter.vue"
+      './components/PageFooter/PageFooter.vue'
     ),
-    "@ProjectsPage": path.resolve(
+    '@ProjectsPage': path.resolve(
       __dirname,
-      "components/ProjectsPage/ProjectsPage.vue"
+      'components/ProjectsPage/ProjectsPage.vue'
     ),
-    "@GitHubStars": path.resolve(__dirname, "components/GitHubStars.vue"),
-    "@NewsActivityBlogSection": path.resolve(
+    '@GitHubStars': path.resolve(__dirname, 'components/GitHubStars.vue'),
+    '@NewsActivityBlogSection': path.resolve(
       __dirname,
-      "components/NewsActivityBlogSection/NewsActivityBlogSection.vue"
-    ),
+      'components/NewsActivityBlogSection/NewsActivityBlogSection.vue'
+    )
   },
   plugins: [
     // Search
     searchProPlugin({
       // index all content
-      indexContent: true,
+      indexContent: true
 
       // add supports for category and tags
       // customFields: [
@@ -169,7 +161,8 @@ export default defineUserConfig({
       //   },
       // ],
     }),
-  ],
+    require('./getAllFrontmatter')
+  ]
   // Enable it with pwa
   // shouldPrefetch: false,
 });

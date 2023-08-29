@@ -18,35 +18,43 @@ const enHomeOption: HomeOption = {
   PROJECT_DETAILS: [
     {
       name: 'Hmily',
-      description: 'Flexible distributed transaction solution.'
+      description: 'Flexible distributed transaction solution.',
+      url: 'https://dromara.org/zh/projects/hmily/overview/'
     },
     {
       name: 'Hutool',
-      description: 'A set of tools that keep Java sweet.'
+      description: 'A set of tools that keep Java sweet.',
+      url: 'https://hutool.cn/'
     },
     {
       name: 'Sa-Token',
-      description: 'The most comprehensive Java permission framework.'
+      description: 'The most comprehensive Java permission framework.',
+      url: 'http://sa-token.dev33.cn/'
     },
     {
       name: 'Jpom',
-      description: 'Simple & Low-intrusion project management platform.'
+      description: 'Simple & Low-intrusion project management platform.',
+      url: 'https://jpom.io/'
     },
     {
       name: 'TLog',
-      description: 'Lightweight distributed log label tracking framework.'
+      description: 'Lightweight distributed log label tracking framework.',
+      url: 'https://yomahub.com/tlog/'
     },
     {
       name: 'Cubic',
-      description: 'Distributed monitoring system.'
+      description: 'Distributed monitoring system.',
+      url: 'https://cubic.jiagoujishu.com/'
     },
     {
       name: 'Koalas-rpc',
-      description: 'Highly available and extensible RPC framework.'
+      description: 'Highly available and extensible RPC framework.',
+      url: 'https://github.com/dromara/koalas-rpc'
     },
     {
       name: 'Fast Request',
-      description: "IDEA's postman."
+      description: "IDEA's postman.",
+      url: 'https://dromara.org/fast-request'
     }
   ],
   COMMUNITY: 'Community',

@@ -1,6 +1,7 @@
 type ProjectDetail = {
   name: string;
   description: string;
+  url: string;
 };
 
 type CommunityDetail = {

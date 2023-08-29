@@ -5,8 +5,8 @@ date: 2020-09-28
 tag:
   - hmily
 cover: /assets/img/architecture/hmily-framework.png
-
-comment: false
+head:
+  - name: 新闻
 ---
 
 感谢朋友们一路以来的支持，让大家久等了。在这一个版本中，我们团队重构了整个项目，合理的划分功能模块，新增配置中心，调整底层存储结构，解决疑难 bug，以及其他新功能的支持，也吸收了更多开源社区的优秀人才的加入。

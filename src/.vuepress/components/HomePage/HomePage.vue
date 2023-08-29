@@ -53,12 +53,18 @@
 
     <div class="project">
       <h2 class="header-project">{{ homeOption.PROJECT }}</h2>
-      <p class="more">{{ homeOption.MORE_PROJECTS + '&nbsp;&nbsp;>' }}</p>
+      <a
+        :href="
+          lang === 'zh-CN' || lang === '/zh/' ? '/zh/projects/' : '/projects/'
+        "
+        class="more"
+        >{{ homeOption.MORE_PROJECTS + '&nbsp;&nbsp;>' }}</a
+      >
       <div class="project-container">
         <img class="project-img" src="/assets/img/projects.png" alt="project" />
         <div class="projects">
           <template v-for="item in homeOption.PROJECT_DETAILS" :key="item.name">
-            <div class="project-item">
+            <div class="project-item" @click="navigateTo(item.url)">
               <div class="top-text">{{ item.name }}</div>
               <div class="bottom-text">{{ item.description }}</div>
             </div>
@@ -70,17 +76,14 @@
       <h2 class="header-community">{{ homeOption.COMMUNITY }}</h2>
       <div class="feature-wrapper">
         <div class="feature">
-          <template
-            v-for="section in homeOption.COMMUNITY_ITEM"
-            :key="section.category"
-          >
+          <template v-for="section in communityLink" :key="section.category">
             <div class="feature-container">
               <div class="feature-title">
                 <img :src="section.icon" />
                 <h2>{{ section.category }}</h2>
               </div>
               <template v-for="item in section.details" :key="item.title">
-                <div class="community-item">
+                <div class="community-item" @click="navigateTo(item.url)">
                   <div class="content">
                     <div class="title">{{ item.title }}</div>
                     <div class="time">{{ item.time }}</div>
@@ -118,9 +121,131 @@ import { type HomeOption } from './types';
 import { useSiteLocaleData } from '@vuepress/client';
 import enHomeOption from './en';
 import zhHomeOption from './zh';
+import { siteData } from '@vuepress/client';
+
+const allPagesFrontmatter = siteData.value.frontmatter;
 
 const siteLocaleData = useSiteLocaleData();
 const lang = ref(siteLocaleData.value.lang);
+let communityLink = reactive([]);
+const enCommunityLink = reactive([]);
+const zhCommunityLink = reactive([]);
+// 初始化分组对象
+const groupedPages = {
+  新闻: [],
+  News: [],
+  博客: [],
+  Blog: [],
+  活动: [],
+  Activity: []
+};
+
+// 遍历所有页面的 frontmatter
+for (const frontmatter of allPagesFrontmatter) {
+  // 确保 frontmatter 有 head 属性
+  if (frontmatter.head && frontmatter.head.length > 0) {
+    const headName = frontmatter.head[0].name; // 假设 head 是一个数组，取第一个元素的 name 属性作为标识
+    // 如果是新闻、博客或活动，则添加到相应的数组中
+    if (groupedPages[headName] !== undefined) {
+      groupedPages[headName].push({
+        title: frontmatter.title,
+        url: extractPathFromURL(
+          frontmatter.head.flat().find((item) => item.property === 'og:url')
+            .content
+        ),
+        time: formatDate(frontmatter.date),
+        category: headName
+      });
+    }
+  }
+}
+
+// 最终得到按照 head 分组的对象，只包含新闻、博客、活动三种 head
+console.log(groupedPages);
+function extractPathFromURL(url) {
+  const match = url.match(/\/([^/]+\.html)$/);
+
+  // 如果匹配成功，返回匹配到的部分
+  if (match && match[1]) {
+    return match[1];
+  } else {
+    return null; // 或者根据需要返回一个默认值或错误提示
+  }
+}
+function formatDate(inputDate) {
+  const date = new Date(inputDate);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
+}
+// 定义一个映射，将 headName 映射到对应的 icon 路径
+const mapping = {
+  News: {
+    icon: '/assets/img/news.png',
+    urlPrefix: 'news/'
+  },
+  Activity: {
+    icon: '/assets/img/activity.png',
+    urlPrefix: 'activity/'
+  },
+  Blog: {
+    icon: '/assets/img/blog.png',
+    urlPrefix: 'blog/'
+  },
+  新闻: {
+    icon: '/assets/img/news.png',
+    urlPrefix: 'news/'
+  },
+  活动: {
+    icon: '/assets/img/activity.png',
+    urlPrefix: 'activity/'
+  },
+  博客: {
+    icon: '/assets/img/blog.png',
+    urlPrefix: 'blog/'
+  }
+};
+// 遍历 groupedPages 中的每个分组
+for (const headName in groupedPages) {
+  if (groupedPages.hasOwnProperty(headName)) {
+    const pages = groupedPages[headName];
+
+    // 按照日期排序
+    pages.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    // 只选择日期最新的前 5 个项目
+    const latestPages = pages.slice(0, 5);
+
+    // 获取映射
+    const { icon, urlPrefix } = mapping[headName];
+
+    const formattedPages = {
+      category: headName,
+      icon: icon,
+      details: latestPages
+        .map((page) => ({
+          title: page.title,
+          time: page.time,
+          url: `${urlPrefix}${page.url}`
+        }))
+        .sort((a, b) => new Date(b.time) - new Date(a.time)) // 对 details 内部的项目按时间排序
+    };
+
+    if (headName === 'News' || headName === 'Activity' || headName === 'Blog') {
+      enCommunityLink.push(formattedPages);
+    } else if (
+      headName === '新闻' ||
+      headName === '活动' ||
+      headName === '博客'
+    ) {
+      zhCommunityLink.push(formattedPages);
+    }
+  }
+}
+
+console.log(enCommunityLink);
 
 let homeOption: HomeOption = reactive({
   QUICK_START: '',
@@ -144,8 +269,10 @@ watch(
     lang.value = newLang;
     if (lang.value === 'zh-CN' || lang.value === '/zh/') {
       homeOption = zhHomeOption;
+      communityLink = zhCommunityLink;
     } else {
       homeOption = enHomeOption;
+      communityLink = enCommunityLink;
     }
   },
   {
@@ -163,7 +290,7 @@ onMounted(() => {
   const clientH = window.innerHeight;
 
   const halfViewportHeight = clientH / 2;
-  function applyScale (
+  function applyScale(
     element: HTMLHeadingElement,
     top: number,
     midPoint: number
@@ -174,7 +301,7 @@ onMounted(() => {
     }
   }
 
-  function updateScales (): void {
+  function updateScales(): void {
     applyScale(
       scalingElementProject,
       scalingElementProject.getBoundingClientRect().top,
@@ -192,6 +319,9 @@ onMounted(() => {
     window.removeEventListener('scroll', updateScales);
   });
 });
+const navigateTo = (url: string) => {
+  window.location.href = url;
+};
 </script>
 <style scoped lang="scss">
 .home-page {
@@ -373,29 +503,29 @@ onMounted(() => {
       grid-template-rows: repeat(4, 100px);
       gap: 10px;
       min-width: 380px;
-      .project-item {
-        background-color: #fff;
-        padding: 10px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        border-radius: 8px;
-        border: 1px solid #f1f2f5;
-        color: #414960;
+    }
+    .project-item {
+      background-color: #fff;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      border-radius: 8px;
+      border: 1px solid #f1f2f5;
+      color: #414960;
+      cursor: pointer;
 
-        .top-text {
-          font-size: 18px;
-        }
+      .top-text {
+        font-size: 18px;
+      }
 
-        .bottom-text {
-          font-size: 16px;
-        }
-        &:hover {
-          color: #2e64fe;
-          cursor: pointer;
-          box-shadow: 0px 4px 32px 0px rgba(0, 0, 0, 0.06),
-            0px 0px 10px 0px rgba(0, 0, 0, 0.04);
-        }
+      .bottom-text {
+        font-size: 16px;
+      }
+      &:hover {
+        color: #2e64fe !important;
+        box-shadow: 0px 4px 32px 0px rgba(0, 0, 0, 0.06),
+          0px 0px 10px 0px rgba(0, 0, 0, 0.04);
       }
     }
   }
@@ -409,6 +539,7 @@ onMounted(() => {
     color: #2e64fe;
     margin-top: 0;
     padding: 5px 10px;
+    margin-bottom: 16px;
     cursor: pointer;
     &:hover {
       display: inline-block;

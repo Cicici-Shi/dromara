@@ -5,8 +5,8 @@ date: 2021-03-23
 tag:
   - Soul
 cover: /assets/img/blog8/08.jpg
-
-comment: false
+head:
+  - name: 博客
 ---
 
 ## 目标
