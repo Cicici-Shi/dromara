@@ -6,7 +6,8 @@ tag:
   - Soul
 cover: /assets/img/architecture/soul-framework.png
 head:
-  - name: 新闻
+  - - meta
+    - name: 新闻
 ---
 
 ### Soul 网关发布 1.0.4-RELEASE 版本

@@ -6,7 +6,8 @@ tag:
 date: 2020-06-17
 cover: /assets/img/architecture/soul-framework.png
 head:
-  - name: News
+  - - meta
+    - name: News
 ---
 
 Let's take a look at the new features first, and then I would like to share my story.

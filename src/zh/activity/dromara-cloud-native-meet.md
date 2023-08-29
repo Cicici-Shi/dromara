@@ -8,7 +8,8 @@ tag:
   - Reactor
 cover: /assets/img/activities/dromara-open-soul-02.jpg
 head:
-  - name: 活动
+  - - meta
+    - name: 活动
 ---
 
 ![Dromara 线上活动](/assets/img/activite/soul-xmind.png)

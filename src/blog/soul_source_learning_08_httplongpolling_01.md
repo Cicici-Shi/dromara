@@ -6,7 +6,8 @@ tag:
   - Soul
 cover: /assets/img/architecture/soul-framework.png
 head:
-  - name: Blog
+  - - meta
+    - name: Blog
 ---
 
 ## Data synchronization between background and gateway (Http long polling)
@@ -16,7 +17,6 @@ head:
 ** Background information mode switching **
 
 In the previous analysis of Zookeeper synchronization ([ Soul Gateway Source Code Analysis-Issue 11 ](https://blog.csdn.net/zm469568595/article/details/113065463)), we switched through the DataSyncConfiguration configuration class. This time, we have experience and paste the configuration directly.
-
 
 ```yml
 soul:
@@ -31,7 +31,6 @@ soul:
 
 After the background mode switching is completed, the next step is the gateway. Continue to find the parameter settings on the key configuration class. The gateway configuration is also directly posted here.
 
-
 ```yml
 soul:
   sync:
@@ -44,7 +43,6 @@ soul:
 ### Data ChangedListener system
 
 Background data initialization Data SyncConfiguration configures key beans. Take a look at the Http long polling Bean here.
-
 
 ```java
 @Configuration
@@ -67,7 +65,6 @@ public class DataSyncConfiguration {
 Http LongPollingData ChangedListener inherit from AbstractData ChangedListener, which are implemented from the interface DataChangedListener.
 
 We should be very familiar with the DataChangedListener interface, which provides many methods of different data type changes for the DataChangedEventDispatcher to call, and this class is an "old friend" as a transit station. Diligent ** Handle event classification and distribution for data synchronization **
-
 
 ```java
 public class DataChangedEventDispatcher implements ApplicationListener<DataChangedEvent>, InitializingBean {
@@ -101,7 +98,6 @@ public class DataChangedEventDispatcher implements ApplicationListener<DataChang
 }
 ```
 
-
 ```java
 public interface DataChangedListener {
 
@@ -118,7 +114,6 @@ public interface DataChangedListener {
 ```
 
 After understanding the functions of these two, what does AbstractData ChangedListener do? Take an example of onPluginChanged ():
-
 
 ```java
 public abstract class AbstractDataChangedListener implements DataChangedListener, InitializingBean {
@@ -162,7 +157,6 @@ After the DataChange dEventDispatcher calls onPluginChanged (), how does the lon
 
 The web socket pattern, for example, rewrites onPluginChanged () itself to send the websocket information to the holding session, which has a gateway.
 
-
 ```java
 public class WebsocketDataChangedListener implements DataChangedListener {
 
@@ -176,7 +170,6 @@ public class WebsocketDataChangedListener implements DataChangedListener {
 ```
 
 Looking at the zookeeper pattern, it also rewrites onPluginChanged () to modify the node information on the zookeeper so that the gateway side will hear their node changes.
-
 
 ```java
 public class ZookeeperDataChangedListener implements DataChangedListener {
@@ -223,7 +216,6 @@ There are three points involved here:
 
 Around our thinking, look at how Http LongPollingData ChangedListener is achieved. Let's take a look at the implementation of the parent onPluginChanged ().
 
-
 ```java
 public class HttpLongPollingDataChangedListener extends AbstractDataChangedListener {
 
@@ -239,7 +231,6 @@ public class HttpLongPollingDataChangedListener extends AbstractDataChangedListe
 Http long polling does not directly override onPluginChanged (), but directly uses its parent class, which means that its CACHE is used. In the end, our information acquisition must also be analyzed. Put it aside for the time being.
 
 The following logic will call the afterPluginChanged () method of our implementation, where a timed thread pool is used to run a Runnable task DataChangeTask.
-
 
 ```java
 class DataChangeTask implements Runnable {
@@ -264,7 +255,6 @@ Let me guess what it does. `clients` It's likely that the request is held by the
 
 We now trace the following `client` generation, which is a BlockingQueue blocking queue in the HttpLongPollingData ChangedListener, which is periodically detected in the LongPolling Client.
 
-
 ```java
 class LongPollingClient implements Runnable {
 
@@ -284,7 +274,6 @@ class LongPollingClient implements Runnable {
 Instead of analyzing the detection code block of remove (), you can see the add () in the last sentence, which is `clients` the source of the data.
 
 Find where LongPollingClient is called. HttpLongPollingData ChangedListener # doLongPolling
-
 
 ```java
 public void doLongPolling(final HttpServletRequest request, final HttpServletResponse response) {
@@ -306,13 +295,11 @@ public void doLongPolling(final HttpServletRequest request, final HttpServletRes
 
 The last sentence here will be called and added `client`, and there is a key line of code that blocks the request:
 
-
 ```java
 final AsyncContext asyncContext = request.startAsync();
 ```
 
 In the LongPolling Client # sendResponse, it has just been analyzed that, in addition to wrapping the injected response information, the held request will also be released.
-
 
 ```java
 class LongPollingClient implements Runnable {
@@ -331,13 +318,11 @@ class LongPollingClient implements Runnable {
 
 After this analysis, we go back to doLongPolling (), where the thread pool calls another key point.
 
-
 ```java
 scheduler.execute(new LongPollingClient(asyncContext, clientIp, HttpConstants.SERVER_MAX_HOLD_TIMEOUT));
 ```
 
 The timeout time of 60s is passed to the LongPolling Client here. What is it used for? Remember that piece of code we skipped over at LongPolling Client # run?
-
 
 ```java
 class LongPollingClient implements Runnable {
@@ -359,7 +344,6 @@ class LongPollingClient implements Runnable {
 ```
 
 Here we have understood the implementation of the long polling process in the background. Finally, we will see how doLongPolling () is called and find the calling class ConfigController.
-
 
 ```java
 @ConditionalOnBean(HttpLongPollingDataChangedListener.class)

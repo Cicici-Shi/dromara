@@ -6,7 +6,8 @@ tag:
 date: 2019-04-05
 cover: /assets/img/architecture/hmily-framework.png
 head:
-  - name: 新闻
+  - - meta
+    - name: 新闻
 ---
 
 ## Hmily 发布 2.0.2-RELEASE 版本

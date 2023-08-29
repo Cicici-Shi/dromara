@@ -6,7 +6,8 @@ tag:
   - Soul
 cover: '/assets/img/blog6/mirco.png'
 head:
-  - name: 博客
+  - - meta
+    - name: 博客
 ---
 
 ### 一、引言

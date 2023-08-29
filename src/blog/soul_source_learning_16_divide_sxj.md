@@ -6,7 +6,8 @@ tag:
 date: 2021-02-01
 cover: /assets/img/activite/soul-xmind.png
 head:
-  - name: Blog
+  - - meta
+    - name: Blog
 ---
 
 ## Plug-in overview

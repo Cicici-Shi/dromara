@@ -7,7 +7,8 @@ tag:
   - TCC
 cover: /assets/img/architecture/hmily-framework.png
 head:
-  - name: Blog
+  - - meta
+    - name: Blog
 ---
 
 # Hmily Framework Features [https://github.com/yu199195/hmily]

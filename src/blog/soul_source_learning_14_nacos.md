@@ -6,7 +6,8 @@ tag:
   - Soul
 cover: '/assets/img/blog5/ns15.png'
 head:
-  - name: Blog
+  - - meta
+    - name: Blog
 ---
 
 This article analyzes the principle of Nacos data synchronization.

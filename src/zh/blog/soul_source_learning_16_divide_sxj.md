@@ -6,8 +6,8 @@ tag:
 date: 2021-02-01
 cover: /assets/img/activite/soul-xmind.png
 head:
-  - name: 博客
-
+  - - meta
+    - name: 博客
 ---
 
 ## 插件概述

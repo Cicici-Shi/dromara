@@ -6,7 +6,8 @@ tag:
   - Soul
 cover: /assets/img/architecture/soul-framework.png
 head:
-  - name: 博客
+  - - meta
+    - name: 博客
 ---
 
 # Soul 源码分析（1） 环境配置

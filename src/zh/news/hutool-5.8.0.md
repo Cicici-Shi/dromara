@@ -6,7 +6,8 @@ tag:
 date: 2022-03-30
 cover: /assets/img/architecture/hutool-framework.png
 head:
-  - name: 新闻
+  - - meta
+    - name: 新闻
 ---
 
 > Hutool 是一个小而全的 Java 工具类库，提供优雅、高效和便捷的工具方法。

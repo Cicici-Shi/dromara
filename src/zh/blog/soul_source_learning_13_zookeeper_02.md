@@ -6,7 +6,8 @@ tag:
   - Soul
 cover: '/assets/img/architecture/soul-framework.png'
 head:
-  - name: 博客
+  - - meta
+    - name: 博客
 ---
 
 #### 启动 admin，与网关。 admin 操作，使用 zookeeper 同步数据到网关

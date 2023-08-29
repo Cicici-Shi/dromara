@@ -6,7 +6,8 @@ tag:
   - hmily
 cover: /assets/img/architecture/hmily-framework.png
 head:
-  - name: Blog
+  - - meta
+    - name: Blog
 ---
 
 ### Handling Highly Concurrent Transactions with Hmily

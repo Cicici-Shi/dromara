@@ -6,7 +6,8 @@ tag:
   - Soul
 cover: /assets/img/architecture/soul-framework.png
 head:
-  - name: Blog
+  - - meta
+    - name: Blog
 ---
 
 # Divide 插件如何转发 http 请求

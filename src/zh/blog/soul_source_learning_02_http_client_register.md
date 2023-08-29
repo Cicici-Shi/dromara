@@ -6,7 +6,8 @@ tag:
   - Soul
 cover: /assets/img/architecture/soul-framework.png
 head:
-  - name: 博客
+  - - meta
+    - name: 博客
 ---
 
 # HTTP 用户接入 Soul 网关注册逻辑分析

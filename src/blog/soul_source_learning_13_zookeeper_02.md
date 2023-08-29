@@ -6,7 +6,8 @@ tag:
   - Soul
 cover: '/assets/img/architecture/soul-framework.png'
 head:
-  - name: Blog
+  - - meta
+    - name: Blog
 ---
 
 #### Start the admin? And Gateway. Admin operation, using zookeeper to synchronize data to the gateway

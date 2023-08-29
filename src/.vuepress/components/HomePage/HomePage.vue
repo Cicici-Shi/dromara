@@ -124,7 +124,7 @@ import zhHomeOption from './zh';
 import { siteData } from '@vuepress/client';
 
 const allPagesFrontmatter = siteData.value.frontmatter;
-
+console.log(allPagesFrontmatter);
 const siteLocaleData = useSiteLocaleData();
 const lang = ref(siteLocaleData.value.lang);
 let communityLink = reactive([]);
@@ -144,7 +144,7 @@ const groupedPages = {
 for (const frontmatter of allPagesFrontmatter) {
   // 确保 frontmatter 有 head 属性
   if (frontmatter.head && frontmatter.head.length > 0) {
-    const headName = frontmatter.head[0].name; // 假设 head 是一个数组，取第一个元素的 name 属性作为标识
+    const headName = frontmatter.head[0][1].name; // 假设 head 是一个数组，取第一个元素的 name 属性作为标识
     // 如果是新闻、博客或活动，则添加到相应的数组中
     if (groupedPages[headName] !== undefined) {
       groupedPages[headName].push({

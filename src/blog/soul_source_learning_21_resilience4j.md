@@ -6,7 +6,8 @@ tag:
 date: 2021-03-22
 cover: /assets/img/blog6/03.jpg
 head:
-  - name: Blog
+  - - meta
+    - name: Blog
 ---
 
 ## Aim
@@ -33,7 +34,6 @@ head:
 
 - Official Dependency Package
 
-
 ```Java
     <dependency>
            <groupId>io.github.resilience4j</groupId>
@@ -48,7 +48,6 @@ head:
 
 - Add dependency in soul gateway
 
-
 ```Java
       <dependency>
            <groupId>org.dromara</groupId>
@@ -62,7 +61,6 @@ head:
 - Find Resilience4j in the plug-in list on the soul-admin console and customize the configuration, as shown in the following figure. ![](https://img-blog.csdnimg.cn/20210321112202189.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3ODY5MjQz,size_16,color_FFFFFF,t_70)
 
 - [ Introduction to the configuration of soul official website ](https://dromara.org/zh/projects/soul/resilience4j-plugin/)
-
 
 ```
 * Resilience4j Processing in Detail:
@@ -98,7 +96,6 @@ head:
 
 - The parameter configuration is checked as follows. If the parameter value is less than the default value, the default value will be directly assigned, so it is convenient to directly modify the configuration of the source code for testing the effect: the number of tokens refreshed each time is 2, the time interval for refreshing tokens is 1 s, and the timeout time is 1 s.
 
-
 ```java
     /**
      * check filed default value.
@@ -129,7 +126,6 @@ head:
 
 - Use SuperBenchmarker tool, 4 threads, execute 10s
 
-
 ```java
 C:\Users\v-yanb07>sb -u http://localhost:9195/http/test/findByUserId?userId=1 -c 4 -N 10
 Starting at 2021-03-14 15:46:28
@@ -157,7 +153,6 @@ Avg: 1677ms
 
 - Output log
 
-
 ```java
 2021-03-14 12:16:35.252  INFO 379336 --- [ctor-http-nio-7] o.d.s.e.h.controller.HttpTestController  : Current limiting test
 2021-03-14 12:16:36.249  INFO 379336 --- [ctor-http-nio-4] o.d.s.e.h.controller.HttpTestController  : Current limiting test
@@ -176,7 +171,6 @@ The console log outputs two lines per second to verify that the throttling is in
 
 - From the configuration information, we know that the fuse is off by default, and we need to open it.
 - Soul-examples-http Add sleep time at call interface
-
 
 ```java
     @GetMapping("/findByUserId")
@@ -197,7 +191,6 @@ The console log outputs two lines per second to verify that the throttling is in
 
 - Resilience4JHandle # checkData Manually set the timeout to 1s
 
-
 ```java
     resilience4JHandle.setTimeoutDuration(1000);
 ```
@@ -206,7 +199,6 @@ The console log outputs two lines per second to verify that the throttling is in
   > http://localhost:9195/http/test/findByUserId?userId=1
 
 In case of multiple requests, some requests return normal data, and some requests return the following data, indicating that the timeout fuse is effective.
-
 
 ```java
 {
@@ -221,7 +213,6 @@ In case of multiple requests, some requests return normal data, and some request
 The soul gateway Resilience4j plug-in source code uses a [reactive programming](https://developer.ibm.com/zh/languages/java/articles/j-cn-with-reactor-response-encode/) lot of methods. First, you need to understand responsive programming.
 
 - Resilience4J Plug-in Directory Structure
-
 
 ```
 └─resilience4j
@@ -247,7 +238,6 @@ The soul gateway Resilience4j plug-in source code uses a [reactive programming](
 
 - Resilience4JPlugn # doExecuteResilience4JPlugn inherits AbstractSoulPlugin like other soul plug-ins. As long as it is enabled, it will go to the core method doExecute through the chain mechanism.
 
-
 ```java
     @Override
     protected Mono<Void> doExecute(final ServerWebExchange exchange, final SoulPluginChain chain, final SelectorData selector, final RuleData rule) {
@@ -267,7 +257,6 @@ The soul gateway Resilience4j plug-in source code uses a [reactive programming](
 ```
 
 - Current Limiting Resilience4JPlugin # rateLimiter
-
 
 ```java
     private Mono<Void> rateLimiter(final ServerWebExchange exchange, final SoulPluginChain chain, final RuleData rule) {
@@ -306,7 +295,6 @@ public <T> Mono<T> run(final Mono<T> toRun, final Function<Throwable, Mono<T>> f
 ```
 
 - Fuse Resilience 4JPlugin # combined
-
 
 ```java
     private Mono<Void> combined(final ServerWebExchange exchange, final SoulPluginChain chain, final RuleData rule) {

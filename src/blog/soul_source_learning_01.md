@@ -6,7 +6,8 @@ tag:
   - Soul
 cover: /assets/img/architecture/soul-framework.png
 head:
-  - name: Blog
+  - - meta
+    - name: Blog
 ---
 
 # Analysis of soul (1) Set up soul environment
@@ -38,6 +39,7 @@ mvn clean package install -Dmaven.test.skip=true -Dmaven.javadoc.skip=true -Drat
 ```
 
 待补，文章内部有报错
+
 ## 2. Startup `soul`
 
 ### 2.1. Startup `soul-admin` module
@@ -48,7 +50,6 @@ Choose to use `MySQL` to storage gateway data and modify the datasource config.
 
 待补，文章内部有报错
 
-
 Run `org.dromara.soul.admin.SoulAdminBootstrap`.
 
 When success, please visit the website `http://localhost:9095/`, then jump to the login page, and input the corresponding user name and password to log in.
@@ -58,8 +59,6 @@ The user name is `admin` and the password is `123456`.
 待补，文章内部有报错
 
 待补，文章内部有报错
-
-
 
 ### 2.2. Startup `soul-bootstrap` module
 

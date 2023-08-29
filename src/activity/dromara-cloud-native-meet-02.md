@@ -8,7 +8,8 @@ tag:
   - Reactor
 cover: /assets/img/activities/dromara-open-soul-03.jpg
 head:
-  - name: Activity
+  - - meta
+    - name: Activity
 ---
 
 ![Dromara Online Activity](/assets/img/activite/soul-xmind.png)

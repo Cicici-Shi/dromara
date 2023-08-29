@@ -6,7 +6,8 @@ tag:
   - Soul
 cover: https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d89a3b45058846be94aa0b8935ec1868~tplv-k3u1fbpfcp-watermark.image
 head:
-  - name: Blog
+  - - meta
+    - name: Blog
 ---
 
 # Review
@@ -24,10 +25,10 @@ Now that we have some understanding of the SoulPlugin class, what is the main pu
 PluginEnum: An enumeration class for plug-ins
 
 | Property | Action                                                                 |
-| ---- | ---------------------------------------------------------------------- |
-| code | The smaller the order of plug-in execution, the earlier the execution. |
-| role | The role has not found a physical reference address at this time       |
-| name | Plug-in name                                                           |
+| -------- | ---------------------------------------------------------------------- |
+| code     | The smaller the order of plug-in execution, the earlier the execution. |
+| role     | The role has not found a physical reference address at this time       |
+| name     | Plug-in name                                                           |
 
 In fact, it is not difficult to find that the current ** Plugins for Default SoulPluginChain ** plug-in has a fixed order of execution, so where is the order of execution of this plug-in defined?
 
@@ -44,13 +45,13 @@ Finally, it can be traced back to the ** SoulConfiguration ** class.
 
 Sort out the related references of the entire PluginEnum class, and sort out the following table. It is not difficult to see the order relationship ![](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d89a3b45058846be94aa0b8935ec1868~tplv-k3u1fbpfcp-watermark.image) between plug-ins.
 
-| Level                 | Action                                                                               |
-| -------------------- | ------------------------------------------------------------------------------------ |
-| Level 1	             | Only GlobalPlugin Global Plugin                                                      |
-| Level 2 to 8   | It can be understood as a pre-processing plug-in before the request is initiated     |
-| Level 9 to 11	 | It can be understood as different call processing for the way of the caller.         |
-| Level 12	           | Only MonitorPlugin monitor plug-in                                                   |
-| Level 13	           | It is a response-related plug-in for processing the results returned by each caller. |
+| Level         | Action                                                                               |
+| ------------- | ------------------------------------------------------------------------------------ |
+| Level 1       | Only GlobalPlugin Global Plugin                                                      |
+| Level 2 to 8  | It can be understood as a pre-processing plug-in before the request is initiated     |
+| Level 9 to 11 | It can be understood as different call processing for the way of the caller.         |
+| Level 12      | Only MonitorPlugin monitor plug-in                                                   |
+| Level 13      | It is a response-related plug-in for processing the results returned by each caller. |
 
 In the previous review, we have already understood the general process of soul processing requests.
 
@@ -130,7 +131,7 @@ It is not difficult to see that the main purpose of the excute method of GlobalP
 
 So what are the properties of the SoulContext object?
 
-| property          | Meaning                                                                                                                                   |
+| property      | Meaning                                                                                                                                   |
 | ------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
 | module        | Each RPCType has a different value for the preceding address of the gateway call when HTTP is called.                                     |
 | method        | Method name after cutting (when RpcType is HTTP)                                                                                          |

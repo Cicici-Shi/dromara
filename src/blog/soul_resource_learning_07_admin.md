@@ -6,7 +6,8 @@ tag:
   - Soul
 cover: /img/architecture/soul-framework.png
 head:
-  - name: Blog
+  - - meta
+    - name: Blog
 ---
 
 # Source Code Analysis

@@ -6,7 +6,8 @@ tag:
   - Soul
 cover: /assets/img/architecture/soul-framework.png
 head:
-  - name: 博客
+  - - meta
+    - name: 博客
 ---
 
 # SOUL 中 SPI 的使用

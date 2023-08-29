@@ -6,7 +6,8 @@ tag:
   - Soul
 cover: '/assets/img/architecture/soul-framework.png'
 head:
-  - name: Blog
+  - - meta
+    - name: Blog
 ---
 
 #### Start soul-admin and soul-bootstrap, and use zookeeper to synchronize data to the gateway
@@ -16,7 +17,6 @@ head:
 1. For soul-admin service configuration, restart the service.
 
 soul-admin/src/main/resources/application.yml
-
 
 ```yaml
 soul:
@@ -31,7 +31,6 @@ soul:
 
 soul-bootstrap/pom.xml
 
-
 ```xml
 <!--soul data sync start use zookeeper-->
 <dependency>
@@ -42,7 +41,6 @@ soul-bootstrap/pom.xml
 ```
 
 soul-bootstrap/src/main/resources/application-local.yml
-
 
 ```yaml
 soul:
@@ -57,7 +55,6 @@ soul:
 
 1. Start zookeeper
 
-
 ```
 zookeeper ./bin/zkServer.sh start
 /usr/bin/java
@@ -67,7 +64,6 @@ Starting zookeeper ... STARTED
 ```
 
 2. The soul-admin gateway background service is started. After the service is started, you can see the ZooKeeper request call.
-
 
 ```
 
@@ -84,7 +80,6 @@ Starting zookeeper ... STARTED
 ```
 
 3. The soul-bootstrap gateway service is started. After the service is started, you can see the ZooKeeper request call.
-
 
 ```
 2021-01-20 17:35:58.996  INFO 64583 --- [           main] s.b.s.d.z.ZookeeperSyncDataConfiguration : you use zookeeper sync soul data.......
@@ -105,7 +100,6 @@ Starting zookeeper ... STARTED
 After the soul-admin is started, the zkclient. ZkClient org.I0Itec. Is seen in the console, which is used as an entry point for tracing and debugging.
 
 1. Function of ZookeeperConfiguration: Register zkClient to the Spring container.
-
 
 ```java
 // EnableConfigurationProperties Purpose: Enables classes annotated with @ConfigurationProperties. If a configuration class is only annotated with @ConfigurationProperties and not with @Component, then the bean converted from the properties configuration file cannot be obtained in the IOC container. @EnableConfigurationProperties is equivalent to injecting classes that use @ConfigurationProperties.
@@ -141,7 +135,6 @@ The org. Dromara. Soul. Admin. Listener. DataChangedEventDispatcher acts as an e
 This class implements the InitializingBean. During the DataChangedEventDispatcher initialization, the afterPropertiesSet method is executed.
 
 The After PropertiesSet method looks for beans in the container whose type is the DataChangedListener. Class.
-
 
 ```java
 @Component
@@ -181,7 +174,6 @@ ZookeeperData ChangedListener Data Change Listener, which is used to listen to m
 
 ZookeeperDataInit zookeeper data initialization. Function: Synchronize initialization data to zookeeper.
 
-
 ```java
 /**
  * The type Zookeeper listener.
@@ -220,7 +212,6 @@ CommandLine Runner: Function: SpringBoot will traverse all entity classes that i
 
 The run method calls the syncData Service. SyncAll method.
 
-
 ```java
 public class ZookeeperDataInit implements CommandLineRunner {
     private final ZkClient zkClient;
@@ -249,7 +240,6 @@ public class ZookeeperDataInit implements CommandLineRunner {
 5、org.dromara.soul.admin.service.sync.SyncDataServiceImpl
 
 The syncAll method invokes the event publisher to publish an event of DataEventTypeEnum. REFRESH.
-
 
 ```java
 /**

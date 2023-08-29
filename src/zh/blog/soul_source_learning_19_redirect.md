@@ -6,7 +6,8 @@ tag:
   - Soul
 cover: /assets/img/blog6/01.jpg
 head:
-  - name: 博客
+  - - meta
+    - name: 博客
 ---
 
 # 介绍

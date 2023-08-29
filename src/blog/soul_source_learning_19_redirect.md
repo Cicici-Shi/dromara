@@ -6,7 +6,8 @@ tag:
   - Soul
 cover: /assets/img/blog6/01.jpg
 head:
-  - name: Blog
+  - - meta
+    - name: Blog
 ---
 
 # Introduction

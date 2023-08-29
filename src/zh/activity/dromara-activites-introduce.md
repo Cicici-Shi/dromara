@@ -8,7 +8,8 @@ tag:
   - GateWay
 cover: /assets/img/activities/dromara-open-soul-01.jpg
 head:
-  - name: 活动
+  - - meta
+    - name: 活动
 ---
 
 ![Dromara 梦码读书会介绍](/assets/img/activite/soul-xmind.png)

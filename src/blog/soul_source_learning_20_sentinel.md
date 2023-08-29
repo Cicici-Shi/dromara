@@ -6,7 +6,8 @@ tag:
   - Soul
 cover: /assets/img/blog6/02.jpg
 head:
-  - name: Blog
+  - - meta
+    - name: Blog
 ---
 
 # Overview
@@ -73,12 +74,11 @@ There are five configurations related to flow control, which are "flow control e
 
 ![](https://rfc2616.oss-cn-beijing.aliyuncs.com/blog/soul16-04.png)
 
-It should be noted that the Sentinel component runs independently in each gateway of the soul. If the gateway is a cluster, the amount actually transmitted to the following services needs to be multiplied by the number of soul gateway services during flow control. That is, if our soul gateway deploys three nodes, all requests are evenly distributed to each node through nginx. The flow control configured for one interface is 10 qps, so the actual QPS to be processed by the backward service is 10 \ * 3. Fuse also needs to consider this situation, only when a service on three nodes triggers a fuse, then the service will not receive any more requests.
+It should be noted that the Sentinel component runs independently in each gateway of the soul. If the gateway is a cluster, the amount actually transmitted to the following services needs to be multiplied by the number of soul gateway services during flow control. That is, if our soul gateway deploys three nodes, all requests are evenly distributed to each node through nginx. The flow control configured for one interface is 10 qps, so the actual QPS to be processed by the backward service is 10 \ \* 3. Fuse also needs to consider this situation, only when a service on three nodes triggers a fuse, then the service will not receive any more requests.
 
 # Sentinel Plugin Source Code Reading
 
 The source code of Sentinel plug-in in soul mainly includes three parts, "Sentinel Rule Handle" is responsible for processing the processing logic when the Sentinel rule is synchronized from the management node, and "Sentine lPlugin" the processing logic of the plug-in ". "SentinelFallback Handler" for the processing logic that triggered the flow control or fuse. ". Let me take a look at them one by one. First is "Sentine lRuleHandle" ", the source code is as follows:
-
 
 ```java
 public class SentinelRuleHandle implements PluginDataHandler {
@@ -161,7 +161,6 @@ public class SentinelRuleHandle implements PluginDataHandler {
 
 The Sentine lPlugin "of the plug-in execution logic code is as follow
 
-
 ```java
 public class SentinelPlugin extends AbstractSoulPlugin {
     // Handler for exception handling
@@ -212,7 +211,6 @@ public class SentinelPlugin extends AbstractSoulPlugin {
 ```
 
 Exception handling is Sentine lFallbackHandler ". In the soul, whether it is the processing of the request after the fuse or the request under flow control, the soul will directly return an error
-
 
 ```java
 public class SentinelFallbackHandler implements FallbackHandler {

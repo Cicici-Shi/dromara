@@ -6,7 +6,8 @@ tag:
   - Soul
 cover: /assets/img/architecture/soul-framework.png
 head:
-  - name: Blog
+  - - meta
+    - name: Blog
 ---
 
 # Plug-in chain summary

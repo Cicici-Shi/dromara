@@ -2,11 +2,12 @@
 title: Hmily：轻松搞定高并发分布式事务
 author: xiaoyu
 date: 2018-11-14
-tag: 
+tag:
   - hmily
 cover: /assets/img/architecture/hmily-framework.png
 head:
-  - name: 博客
+  - - meta
+    - name: 博客
 ---
 
 ### Hmily 高并发事务处理

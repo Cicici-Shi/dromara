@@ -7,7 +7,8 @@ tag:
   - TCC
 cover: /assets/img/architecture/hmily-framework.png
 head:
-  - name: 博客
+  - - meta
+    - name: 博客
 ---
 
 # Hmily 框架特性[https://github.com/yu199195/hmily]

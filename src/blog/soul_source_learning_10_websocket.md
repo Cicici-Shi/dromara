@@ -6,7 +6,8 @@ tag:
   - Soul
 cover: /assets/img/architecture/soul-framework.png
 head:
-  - name: Blog
+  - - meta
+    - name: Blog
 ---
 
 > Fan Jinpeng
@@ -38,7 +39,6 @@ You can see that the foreground sends a PUT request to the background: http://lo
 ## 2.3 Background interface
 
 Search for this interface in the project
-
 
 ```java
 // PluginController.java
@@ -72,7 +72,6 @@ public class PluginController {
 ```
 
 Into the implementation class.
-
 
 ```java
 // PluginServiceImpl.java
@@ -111,7 +110,6 @@ It can be seen here that the first half is to operate the database and persist t
 
 The event published here is encapsulated by DataChangedEvent, and there is an enumeration in it. There are many types here:
 
-
 ```java
 /**
  * configuration group.
@@ -138,7 +136,6 @@ public enum ConfigGroupEnum {
 Seeing these types, if you still have an impression of the fourth article, you can see that the types of events sent at that time were SELECTOR and RULE, and now it is PLUGIN. Although the types are different, it does not affect us to continue to analyze the logic behind. Let's continue.
 
 Another eventType is also an enumeration. There are five types: DELETE, CREATE, UPDATE, REFRESH, and MYSELF. In this case, it is UPDATE.
-
 
 ```java
 /**
@@ -176,7 +173,6 @@ public enum DataEventTypeEnum {
 ## 2.5 Listen for events
 
 Locate the code that listens for events:
-
 
 ```java
 // DataChangedEventDispatcher.java
@@ -232,7 +228,6 @@ You can see that the DataChangedEventDispatcher implements the InitializingBean 
 So the question is, when are these listeners injected into the container?
 
 First look at the definition of the Data ChangedListener interface:
-
 
 ```java
 /**
@@ -300,7 +295,6 @@ Its inheritance relationship:
 ![ DataChangedListener ](/assets/img/blog3/DataChangedListener.png)
 
 Because the websocket is used by default, the listener here corresponds to the Web socketData ChangedListener, Alt + F7, and the place where this class is instantiated is the following configuration class:
-
 
 ```java
 // DataSyncConfiguration.java
@@ -384,7 +378,6 @@ There are four data synchronization strategies: HTTP long polling, zookeeper, na
 
 See the web socket annotation @ ConditionalOnProperty (name = "soul. Sync. Web socket. Enabled", having Value = "true", Match (IfMissing = true), find the following configuration in the configuration file:
 
-
 ```yaml
 soul:
   sync:
@@ -399,7 +392,6 @@ If you do not want to use the default synchronization policy of the web socket, 
 ### 2.5.2 Listening event processing logic
 
 In order to prevent you from turning back and looking at it, which is inconvenient, I will post the processing logic code here:
-
 
 ```java
 // DataChangedEventDispatcher.java
@@ -435,7 +427,6 @@ All listeners are traversed here. For the current web socket, there is only one 
 Different logics are used according to the type of the published event. The types here correspond to the methods defined in the DataChangedListener interface.
 
 The listener here is an instance of the Web socketData ChangedListener, which will enter the corresponding method in the class:
-
 
 ```java
 // WebsocketDataChangedListener.java
@@ -482,7 +473,6 @@ public class WebsocketDataChangedListener implements DataChangedListener {
 As you can see in the code, the data is encapsulated as Web socketData and sent using the WebsocketController. Send method.
 
 ## 2.6 Synchronize data to soul-bootstrap
-
 
 ```java
 // WebsocketCollector.java
@@ -580,7 +570,7 @@ public class WebsocketCollector {
 
 The Web socketController uses the @ ServerEndpoint ( "/web socket") annotation, opens a web socket service interface, and waits for a connection.
 
-After the soul-bootstrap is started, the web socket will be connected, and the onOpen method will be triggered to store the Session of this connection information in the Set set of the SESSION _ SET.
+After the soul-bootstrap is started, the web socket will be connected, and the onOpen method will be triggered to store the Session of this connection information in the Set set of the SESSION \_ SET.
 
 In the send method, it will first determine whether the DataEventTypeEnum type is MYSELF. This type can be traced back to 2.3-2.4. This time it is UPDATE. As for when it is MYSELF, it needs to be added later. It is doubtful here (//TODO).
 
@@ -595,7 +585,6 @@ At this point, the default web socket synchronization data strategy is clear.
 ### How to establish Web socket? In the background?
 
 ![05](/assets/img/blog1/05.png) Data SyncConfiguration: As the configuration factory of Spring Bean, various listeners can be constructed according to the configuration information. Including HTTP long polling mode, Zookeeper mode, Nacos mode, Web socket method.
-
 
 ```java
 @Configuration
@@ -624,7 +613,6 @@ Web socketListener: As `DataSyncConfiguration` the internal class of, it is resp
 
 Web socket SyncData Configuration: As the configuration factory of Spring Bean, it is the gateway's entrance to build Websocket communication. (An independent startup project `soul-spring-boot-starter-sync-data-websocket` is provided for the gateway to choose freely.)
 
-
 ```java
 @Configuration
 @ConditionalOnClass(WebsocketSyncDataService.class)
@@ -652,7 +640,6 @@ Web socket SyncData Service: Get all the registered beans `WebsocketConfig` and 
 
 SoulWeb socket Client: `Websocket` The communication class monitors the websocket connection and receives information. After receiving the information from the background, it will notify each subscriber.
 
-
 ```java
 public final class SoulWebsocketClient extends WebSocketClient {
 
@@ -670,7 +657,6 @@ public final class SoulWebsocketClient extends WebSocketClient {
 ```
 
 Web socketData Handler: Construct the data processing classes of various implementations `AbstractDataHandler` and cache them during initialization.
-
 
 ```java
 public class WebsocketDataHandler {
@@ -702,7 +688,6 @@ After the entry class `SoulWebsocketClient` that implements Websocket communicat
 ![07](/assets/img/blog1/07.png)
 
 AbstractDataHandler: The implementation `handler()` method calls the corresponding event abstract method according to the type of the event (such as refresh, update, create, delete, etc.).
-
 
 ```java
 public abstract class AbstractDataHandler<T> implements DataHandler {
@@ -741,7 +726,6 @@ Different `DataHandler` calls have different subscription methods:
 - The notification selector is `SelectorDataHandler` called `onSelectorSubscribe()` to change the metadata
 - Notification rule metadata change `RuleDataHandler` is invoked `onRuleSubscribe()`
 
-
 ```java
 @RequiredArgsConstructor
 public class PluginDataHandler extends AbstractDataHandler<PluginData> {
@@ -761,7 +745,6 @@ public class PluginDataHandler extends AbstractDataHandler<PluginData> {
 CommonPluginData Subscriber: The `onSubscribe()` method of the subscriber notifies all classes injected as beans `PluginDataHandler` (not to be confused with the previous class of the same name, which is `soul-plugin-base` the interface under. Its implementation classes are in the respective pluggable plug-in packages.
 
 ![ image-20210122172333111 ](/assets/img/blog1/image-20210122172333111.png)
-
 
 ```java
 public class CommonPluginDataSubscriber implements PluginDataSubscriber {

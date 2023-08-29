@@ -6,7 +6,8 @@ tag:
   - Soul
 cover: /assets/img/architecture/soul-framework.png
 head:
-  - name: Blog
+  - - meta
+    - name: Blog
 ---
 
 # Logic Analysis of HTTP User Accessing to Soul Gateway
@@ -16,7 +17,6 @@ head:
 When the HTTP user accesses the Soul Gateway, it will call the soul-admin interface to register the interface that needs to be managed by the Soul Gateway. Let's see what we have done today.
 
 First look at the interface information called as follows:
-
 
 ```java
 // SpringMvcClientBeanPostProcessor.java
@@ -37,7 +37,6 @@ public SpringMvcClientBeanPostProcessor(final SoulSpringMvcConfig soulSpringMvcC
 
 Search "springmvc-register" globally and find the SoulClientController under the soul-admin module. See here. Are we familiar with those who often write CRUD? Ha-ha
 
-
 ```java
 // SoulClientController.java
 /**
@@ -53,7 +52,6 @@ public String registerSpringMvc(@RequestBody final SpringMvcRegisterDTO springMv
 ```
 
 Service layer implementation class:
-
 
 ```java
 // SoulClientRegisterServiceImpl.java
@@ -75,7 +73,6 @@ public String registerSpringMvc(final SpringMvcRegisterDTO dto) {
 Dto. IsRegister MetaData () is used to determine whether to register metadata information. I don't know when to use it, and I have doubts.//TODO, go down first.
 
 ### 2.1 Take a look at the method handlerSpringMvcSelector to handle the Selector.
-
 
 ```java
 // SoulClientRegisterServiceImpl.java
@@ -126,7 +123,6 @@ private String handlerSpringMvcSelector(final SpringMvcRegisterDTO dto) {
 
 For the new access, the selectorDO cannot be found in the database. Enter the registerSelector method to carefully see which database tables have been inserted with data.
 
-
 ```java
 // SoulClientRegisterServiceImpl.java
 private String registerSelector(final String contextPath, final String rpcType, final String appName, final String uri) {
@@ -172,7 +168,6 @@ Are you excited to see so many if else? You can think about how to optimize so m
 
 Having written so much, it is nothing more than encapsulating the Selector DTO object, and finally calling the selectorS ervice. Register (Selector DTO) into the library, and continuing to follow.
 
-
 ```java
 // SelectorServiceImpl.java
 @Override
@@ -193,7 +188,7 @@ public String register(final SelectorDTO selectorDTO) {
 }
 ```
 
-You can see that there are two warehousing methods, which insert data into the selector and selector _ condition tables respectively. Here we will not discuss the structure and business significance of the table in detail, and we will add it later.
+You can see that there are two warehousing methods, which insert data into the selector and selector \_ condition tables respectively. Here we will not discuss the structure and business significance of the table in detail, and we will add it later.
 
 The publishEvent method, which involves the ApplicationEventPublisher interface, is an implementation of the observer pattern. After the event is published, the subsequent operations are completed through the listener. Here, press No Table first, and then write an article for analysis.
 
@@ -202,7 +197,6 @@ The publishEvent method, which involves the ApplicationEventPublisher interface,
 Just like Inception, we go back two layers of dreams and go back to the other branch of inserting data. It can be imagined that the system that has been connected to the Soul gateway restarts, or the new node starts to go.
 
 Post the previous code again:
-
 
 ```java
 // SoulClientRegisterServiceImpl.java
@@ -255,7 +249,6 @@ private String handlerSpringMvcSelector(final SpringMvcRegisterDTO dto) {
 
 Because the database table structure design has not been studied, according to some known guesses, one selector corresponds to one divide plug-in, which is identified by contextPath (here is "/HTTP"), and one contextPath can deploy multiple server nodes. The node information is stored in the handle field as JSON.
 
-
 ```json
 // handle/handleAdd 数据格式
 [
@@ -273,14 +266,13 @@ Because the database table structure design has not been studied, according to s
 
 The next step is to update the database update Selective.
 
-upstreamCheckService.submit(contextPath, addDivideUpstream); The real server node information is cached in a Map (UPSTREAM _ MAP), and there are regular tasks to detect the activity. If the service node is found to be down, it will be eliminated to prevent the request from being sent to the node that has been down.
+upstreamCheckService.submit(contextPath, addDivideUpstream); The real server node information is cached in a Map (UPSTREAM \_ MAP), and there are regular tasks to detect the activity. If the service node is found to be down, it will be eliminated to prevent the request from being sent to the node that has been down.
 
 Then there is the eventPublisher. PublishEvent (), which, like the previous publishEvent method, publishes the event and completes the subsequent operations through the listener. Here, the message of data SelectorData modification is sent through the web socket long connection established with the Soul gateway. The Soul gateway modifies the data according to the message. What data is modified and how to modify it will be analyzed later.
 
 At this point, the handlerSpringMvcSelector method is finally analyzed.
 
 ### 2.Let's take a look at the method handlerSpringMvcRule, which handles the Rule.
-
 
 ```java
 // SoulClientRegisterServiceImpl.java
@@ -295,7 +287,6 @@ private void handlerSpringMvcRule(final String selectorId, final SpringMvcRegist
 First, take the name of the rule and go to the rule table to get the data. If the table name has been registered, there is no operation.
 
 Look at the database data, which is the interface address under the business system.
-
 
 ```bash
 mysql> use soul;
@@ -317,7 +308,6 @@ date_updated: 2021-01-14 17:31:39
 ```
 
 If you don't get the data, register this rule.
-
 
 ```java
 // SoulClientRegisterServiceImpl.java
@@ -348,7 +338,6 @@ private void registerRule(final String selectorId, final String path, final Stri
 ```
 
 In the first line, the corresponding RuleHandle is obtained according to rpcType ( "HTTP"). Here, three types are built in by default. Here, HTTP corresponds to DivideRuleHandle.
-
 
 ```java
 // RuleHandleFactory.java
@@ -396,7 +385,6 @@ public final class RuleHandleFactory {
 
 Let's construct the RuleDTO object and register the rules.
 
-
 ```java
 // RuleServiceImpl.java
 @Override
@@ -417,7 +405,7 @@ public String register(final RuleDTO ruleDTO) {
 }
 ```
 
-Insert data into the rule and rule _ condition tables, respectively.
+Insert data into the rule and rule \_ condition tables, respectively.
 
 The publishEvent () method sends RuleData data to the Soul gateway through the web socket long connection.
 
@@ -426,10 +414,10 @@ The publishEvent () method sends RuleData data to the Soul gateway through the w
 At this point, the logical analysis of calling the "/soul-client/springmvc-register" interface is finished, and we summarize as follows:
 
 - Process the selector
-  - Add or modify selector and selector _ condition table data, and persist them to MySQL.
+  - Add or modify selector and selector \_ condition table data, and persist them to MySQL.
   - Send data change information to Soul gateway through websocket.
 - Process the rule
-  - Add or modify the data of rule and rule _ condition tables, and persist them to MySQL.
+  - Add or modify the data of rule and rule \_ condition tables, and persist them to MySQL.
   - Send data change information to Soul gateway through websocket.
 
 The table structure and field meaning need further study and research. After the websocket is sent to the Soul gateway, what the gateway has done also needs follow-up analysis.

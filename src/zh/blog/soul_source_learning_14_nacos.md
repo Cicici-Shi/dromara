@@ -6,7 +6,8 @@ tag:
   - Soul
 cover: '/assets/img/blog5/ns15.png'
 head:
-  - name: 博客
+  - - meta
+    - name: 博客
 ---
 
 本篇分析一下 Nacos 同步数据原理

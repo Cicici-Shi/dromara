@@ -6,7 +6,8 @@ tag:
 date: 2022-03-30
 cover: /assets/img/architecture/hutool-framework.png
 head:
-  - name: News
+  - - meta
+    - name: News
 ---
 
 > Hutool is a small but complete Java utility class library that provides elegant, efficient and convenient tool methods.

@@ -6,7 +6,8 @@ tag:
   - Soul
 cover: /assets/img/architecture/soul-framework.png
 head:
-  - name: 博客
+  - - meta
+    - name: 博客
 ---
 
 ## 后台与网关数据同步 (Http 长轮询篇)

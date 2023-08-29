@@ -6,7 +6,8 @@ tag:
   - Soul
 cover: /img/architecture/soul-framework.png
 head:
-  - name: 博客
+  - - meta
+    - name: 博客
 ---
 
 # 源码分析

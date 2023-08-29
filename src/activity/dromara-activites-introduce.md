@@ -8,7 +8,8 @@ tag:
   - GateWay
 cover: /assets/img/activities/dromara-open-soul-01.jpg
 head:
-  - name: Activity
+  - - meta
+    - name: Activity
 ---
 
 ![Dromara Dream Code Book Club Introduction](/assets/img/activite/soul-xmind.png)

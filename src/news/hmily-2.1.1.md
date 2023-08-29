@@ -6,7 +6,8 @@ tag:
   - hmily
 cover: /assets/img/architecture/hmily-framework.png
 head:
-  - name: News
+  - - meta
+    - name: News
 ---
 
 Thank you guys for your support all the way, and keep everyone waiting. In this version, our team refactored the entire project, reasonably divided functional modules, added configuration centers, adjusted the underlying storage structure, solved difficult bugs, and supported other new features, and absorbed more outstanding open source community members to join in.

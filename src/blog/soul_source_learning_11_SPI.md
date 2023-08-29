@@ -6,13 +6,13 @@ tag:
   - Soul
 cover: /assets/img/architecture/soul-framework.png
 head:
-  - name: Blog
+  - - meta
+    - name: Blog
 ---
 
 # Use of SPI in SOUL
 
 When analyzing the load balancing strategy of the divide plug-in, I saw a line of code:
-
 
 ```java
 DivideUpstream divideUpstream = LoadBalanceUtils.selector(upstreamList, ruleHandle.getLoadBalance(), ip);
@@ -21,7 +21,6 @@ DivideUpstream divideUpstream = LoadBalanceUtils.selector(upstreamList, ruleHand
 At that time, it was easy to skip its implementation, and its function was easy to analyze, calling a method that looked like a tool class, passing in a cluster of multiple nodes, and returning a node. This is a load balancer..
 
 But there are a lot of details, the most important of which is the use of the SPI to select specific implementation classes. Take a look at the code for this method:
-
 
 ```java
 public class LoadBalanceUtils {
@@ -56,7 +55,6 @@ There is also a very vivid brain map in the book, which shows the use of SPI:
 
 That is to say, in the implementation of our code, there is no need to write a Factory, use MAP to wrap some subclasses, and the final return type is the parent interface. You only need to define the resource file and specify the parent interface and its subclasses in the file, and then you can get all the defined subclass objects by setting them:
 
-
 ```java
 ServiceLoader<Interface> loaders = ServiceLoader.load(Interface.class)
 for(Interface interface : loaders){
@@ -75,7 +73,6 @@ According to the specification of SPI, I built a demo to see the specific implem
 ![ image-20210129095703911 ](/assets/img/blog1/image-20210129095703911.png)
 
 A `run()` method is defined in Animal, and a subclass implements it.
-
 
 ```java
 public interface Animal {
@@ -99,7 +96,6 @@ public class Horse implements Animal {
 
 Use the loading class of SPI to get the execution result of the subclass:
 
-
 ```java
 private static void test() {
   final ServiceLoader<Animal> load = ServiceLoader.load(Animal.class);
@@ -116,7 +112,6 @@ private static void test() {
 After the call, we get the implementation classes previously written in the resource file and successfully invoke their respective `run()` methods.
 
 At this point, I have a question **, does each call `ServiceLoader.load(Animal.class)` return the same object? ** If it is, I guess it is loaded into the cache at startup, if not, it may be using reflection at the bottom, and each call has a certain consumption. Let's look at the following experiment:
-
 
 ```java
 public static void main(String[] args) {
@@ -143,7 +138,6 @@ The objects in the two calls are different, which makes me worry about its perfo
 
 To find `java.util,ServiceLoaders` this class, the most striking thing is the directory where we placed the resource files according to the specifications before.
 
-
 ```java
 public final class ServiceLoader<S> implements Iterable<S> {
 
@@ -154,7 +148,6 @@ public final class ServiceLoader<S> implements Iterable<S> {
 When the debug `PREFIX` attribute is called, it is found that `ServiceLoader.load` the lazy loading method is actually used, and the actual return class is not found when it is called, but when it is traversed.
 
 Its lazy loading is implemented in the following code:
-
 
 ```java
 public final class ServiceLoader<S> implements Iterable<S> {
@@ -192,7 +185,6 @@ After the call `ServiceLoader.load`, the key thing is not done, just pass the in
 Seeing this, we can guess that when the object returned by the real iteration call is called, the iterator must be required to complete the search and initialization of the implementation class, while the parameter passing is Class information and loader, and the initialization of the implementation class will obviously be reflection.
 
 Take a look at how LazyIterator is implemented, starting with where it will be called `hasNext()` in the first place:
-
 
 ```java
 private class LazyIterator implements Iterator<S> {
@@ -237,8 +229,7 @@ private class LazyIterator implements Iterator<S> {
 
 ![ image-20210129111231212 ](/assets/img/blog1/image-20210129111231212.png)
 
- `hasNext()` The call can get the name of the class in our resource, write it to the instance property `nextName`, and return it `true` so that the iterator can make `next()` the call.
-
+`hasNext()` The call can get the name of the class in our resource, write it to the instance property `nextName`, and return it `true` so that the iterator can make `next()` the call.
 
 ```java
 public S next() {
@@ -279,7 +270,6 @@ private S nextService() {
 Here we understand that after initialization, the object will be put into the cache, and the key is the interface class. There will be no reflection consumption in the second call.
 
 So why do we produce different object instances in the way we test before? The reason is that each call `ServiceLoader.load()` produces a new `ServiceLoader` object. We will improve the test method:
-
 
 ```java
 public static void main(String[] args) {
@@ -326,7 +316,6 @@ In each database connection package, the implementation of JDBC mode needs to im
 
 So how do the JDBC-related classes in the JDK implement this? The key class is DriverManager
 
-
 ```java
 public class DriverManager {
 
@@ -361,7 +350,6 @@ public class DriverManager {
 
 If the static method of DriverManager is called in the code, the above code will be triggered, and what does the initialization of the ** Its function is to initialize all the Driver implementation classes in the SPI resource file. ** implementation class do? Keep looking `com.mysql.jdbc.Driver`
 
-
 ```java
 public class Driver extends NonRegisteringDriver implements java.sql.Driver {
   static {
@@ -376,7 +364,6 @@ public class Driver extends NonRegisteringDriver implements java.sql.Driver {
 ```
 
 The registration method of DriverManager is very simple, that is, the input parameters are put into static variables as a global cache.
-
 
 ```java
 public class DriverManager {
@@ -403,7 +390,6 @@ public class DriverManager {
 In normal use, we will get the connection directly `DriverManager.getConnection(url, user, passwd)`, but there is a question here. We have registered multiple drivers in DriverManager. Why can we determine a unique Driver here?
 
 To find the `getConnection()` DriverManager first:
-
 
 ```java
 public static Connection getConnection(String url, String user, String password) throws SQLException {
@@ -437,7 +423,6 @@ private static Connection getConnection(
 ```
 
 See how filtering is implemented in the all-important Mysql Driver (which inherits from NonRegisteringDriver)
-
 
 ```java
 public class NonRegisteringDriver implements java.sql.Driver {
@@ -486,7 +471,6 @@ After writing these analyses, let's look at how to implement a simple demo.
 
 Let's share the way I wrote it before.
 
-
 ```java
 static {
   try {
@@ -515,7 +499,6 @@ public static void main(String[] args) {
 
 Although this can be used, don't you think there is extra code? Look at my new way of writing.
 
-
 ```java
 public static void main(String[] args) throws ClassNotFoundException {
   try (
@@ -542,7 +525,6 @@ So we also have a problem in "Java SPI Thinking" that has been solved. ** How do
 ## SOUL SPI implementation
 
 We have a thorough understanding of the use of SPI in Java, while the SPI in Soul is designed by ourselves, using the design idea of SPI in Dubbo. You can see the associated annotation on the `org.dromara.soul.spi.SPI` annotation class.
-
 
 ```java
 /**
@@ -572,7 +554,6 @@ Let's first look at the overall picture of the SPI implementation project, which
 
 The core class is the Extension Loader, which can be said to be the Soul version of the ServiceLoader. It also defines the path location of the SPI resource file.
 
-
 ```java
 public final class ExtensionLoader<T> {
   private static final String SOUL_DIRECTORY = "META-INF/soul/";
@@ -580,7 +561,6 @@ public final class ExtensionLoader<T> {
 ```
 
 By examining the callers of its methods, we find the entry method.
-
 
 ```java
 public final class ExtensionLoader<T> {
@@ -623,7 +603,6 @@ The reason ExtensionLoader can do this enhanced search without iterating over ev
 
 These three caches are divided into two layers, each of which has different purposes. The overview is as follows:
 
-
 ```java
 // 一层缓存
 private final Map<String, Holder<Object>> cachedInstances = new ConcurrentHashMap<>();
@@ -639,7 +618,6 @@ private final Map<Class<?>, Object> joinInstances = new ConcurrentHashMap<>();
 
 The first is the first-tier cache, which is the first thing we come into contact with when searching for the specific implementation class of the interface. If we hit it, we can directly get the object of the implementation class.
 
-
 ```java
 private final Map<String, Holder<Object>> cachedInstances = new ConcurrentHashMap<>();
 ```
@@ -649,7 +627,6 @@ It `key` is actually the information we configured in the Soul SPI resource file
 ![ image-20210130230250748 ](/assets/img/blog1/image-20210130230250748.png)
 
 And it `value` 's the Holder object, which holds the object of the implementation class. When called `getJoin()`, pass in an identity (such as random) to get the implementation class object.
-
 
 ```java
 public T getJoin(final String name) {
@@ -665,13 +642,11 @@ public T getJoin(final String name) {
 
 It `cachedClasses` stores the mapping between the identity (random) and the class object
 
-
 ```java
 private final Holder<Map<String, Class<?>>> cachedClasses = new Holder<>();
 ```
 
 How is the `cachedClasses` cached information populated? Is directly triggered to retrieve the SPI resource file and then parse it into a `cachedClasses` cache. The specific method is in `loadResources()`
-
 
 ```java
 private void loadResources(final Map<String, Class<?>> classes, final URL url) throws IOException {
@@ -689,13 +664,11 @@ private void loadResources(final Map<String, Class<?>> classes, final URL url) t
 
 The `joinInstances` cache holds the mapping of class objects to object instances.
 
-
 ```java
 private final Map<Class<?>, Object> joinInstances = new ConcurrentHashMap<>();
 ```
 
 This layer of cache will get the class object of the corresponding identifier (random) with the help of the second layer of cache, and cache it into itself through the initialization instance of the class object. The corresponding implementation method is as follow
-
 
 ```java
 private T createExtension(final String name) {
@@ -715,7 +688,6 @@ When the implementation class of an interface is loaded through the Extension Lo
 ![09](/assets/img/blog1/09.png)
 
 ### Detailed source code analysis (can be skipped)
-
 
 ```java
 // name can be understood as an identifier used to distinguish a specific implementation class in the SPI file.
@@ -743,7 +715,6 @@ public T getJoin(final String name) {
 }
 ```
 
-
 ```java
 private T createExtension(final String name) {
   // Critical code, searching for the class object corresponding to the identifier.
@@ -765,7 +736,6 @@ private T createExtension(final String name) {
 }
 ```
 
-
 ```java
 public Map<String, Class<?>> getExtensionClasses() {
   // cachedClasses is the third-level cache, storing the mapping of identifiers to class objects.
@@ -784,7 +754,6 @@ public Map<String, Class<?>> getExtensionClasses() {
 }
 ```
 
-
 ```java
 private Map<String, Class<?>> loadExtensionClass() {
   // Get the SPI annotation of the interface.
@@ -801,7 +770,6 @@ private Map<String, Class<?>> loadExtensionClass() {
   return classes;
 }
 ```
-
 
 ```java
 private void loadDirectory(final Map<String, Class<?>> classes) {
@@ -821,7 +789,6 @@ private void loadDirectory(final Map<String, Class<?>> classes) {
   }
 }
 ```
-
 
 ```java
 private void loadResources(final Map<String, Class<?>> classes, final URL url) throws IOException {
@@ -844,7 +811,6 @@ private void loadResources(final Map<String, Class<?>> classes, final URL url) t
   }
 }
 ```
-
 
 ```java
 private void loadClass(final Map<String, Class<?>> classes,

@@ -6,7 +6,8 @@ tag:
   - Soul
 cover: https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9434447ebc674f58b65c26b65f855181~tplv-k3u1fbpfcp-watermark.image
 head:
-  - name: 博客
+  - - meta
+    - name: 博客
 ---
 
 ## 回顾

@@ -6,7 +6,8 @@ tag:
 date: 2020-06-17
 cover: /assets/img/architecture/soul-framework.png
 head:
-  - name: 新闻
+  - - meta
+    - name: 新闻
 ---
 
 我们还是先来看看新增功能，然后再讲故事。

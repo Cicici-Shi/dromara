@@ -6,7 +6,8 @@ tag:
 date: 2021-03-22
 cover: /assets/img/blog6/03.jpg
 head:
-  - name: 博客
+  - - meta
+    - name: 博客
 ---
 
 ## 目标

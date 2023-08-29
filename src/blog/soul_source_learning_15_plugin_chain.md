@@ -6,7 +6,8 @@ tag:
   - Soul
 cover: '/assets/img/blog6/mirco.png'
 head:
-  - name: Blog
+  - - meta
+    - name: Blog
 ---
 
 ### I. Introduction
