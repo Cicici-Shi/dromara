@@ -1,6 +1,6 @@
 ---
 title: 待补，文章内部有报错
-author: chenxi
+author: 季鹏
 date: 2021-01-17
 tag:
   - Soul
@@ -9,6 +9,6 @@ head:
   - name: Blog
 ---
 
-# How does the Divide plugin forward http requests
+# Divide 插件如何转发 http 请求
 
 待补，文章内部有报错
