@@ -30,3 +30,14 @@ export type HomeOption = {
   COMMUNITY: string;
   COMMUNITY_ITEM: CommunityItem[];
 };
+
+interface GroupedPage {
+  title: string;
+  url: string;
+  time: string;
+  category: string;
+}
+
+export type GroupedPages = {
+  [key: string]: GroupedPage[];
+};

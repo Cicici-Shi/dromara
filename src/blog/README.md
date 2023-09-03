@@ -15,7 +15,6 @@ next: false
 import NewsActivityBlogSection from "@NewsActivityBlogSection";
 import { usePageFrontmatter } from "@vuepress/client";
 import type { DefaultThemePageFrontmatter } from "@vuepress/theme-default/lib/shared/index.js";
-import { ref, onBeforeMount } from "vue";
 
 const frontmatter = usePageFrontmatter<DefaultThemePageFrontmatter>();
 

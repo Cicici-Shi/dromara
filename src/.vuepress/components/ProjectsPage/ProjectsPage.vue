@@ -17,32 +17,104 @@
         <h2 class="group-name">{{ item.groupName }}</h2>
         <div class="project-card">
           <div class="project" v-for="obj in item.projects" :key="obj.name">
-            <div class="project-header">
-              <img
-                v-if="!isImageMissing(obj.name)"
-                class="project-title"
-                :src="`/assets/img/logo/${obj.name}.png`"
-                :alt="obj.name"
-              />
-              <div v-else class="project-title text">
-                {{ convertToUpperCamelCase(obj.name) }}
+            <div class="project-top">
+              <div class="project-header">
+                <img
+                  v-if="!isImageMissing(obj.name)"
+                  class="project-title"
+                  :src="`/assets/img/logo/${obj.name}.png`"
+                  :alt="obj.name"
+                />
+                <div v-else class="project-title text">
+                  {{ convertToUpperCamelCase(obj.name) }}
+                </div>
+                <div class="gitstar">
+                  <template v-if="lang == 'zh-CN' || lang == '/zh/'">
+                    <a
+                      v-if="!noGiteeProjects.includes(obj.name)"
+                      :href="`https://gitee.com/dromara/${obj.name}/stargazers`"
+                      target="_blank"
+                      ><img
+                        :src="`https://gitee.com/dromara/${obj.name}/badge/star.svg?theme=gvp`"
+                    /></a>
+                  </template>
+                  <template v-else>
+                    <GitHubStars :project="obj.name" />
+                  </template>
+                </div>
               </div>
-              <div class="gitstar">
-                <template v-if="lang == 'zh-CN' || lang == '/zh/'">
-                  <a
-                    v-if="!noGiteeProjects.includes(obj.name)"
-                    :href="`https://gitee.com/dromara/${obj.name}/stargazers`"
-                    target="_blank"
-                    ><img
-                      :src="`https://gitee.com/dromara/${obj.name}/badge/star.svg?theme=gvp`"
-                  /></a>
-                </template>
-                <template v-else>
-                  <GitHubStars :project="obj.name" />
-                </template>
-              </div>
+              <div class="project-description">{{ obj.description }}</div>
             </div>
-            <div class="project-content">{{ obj.description }}</div>
+            <div class="detail">
+              <p>项目sponsor：肖宇（yu199195）</p>
+              <p>加入时间：2017.09</p>
+              <p>
+                <a
+                  target="_blank"
+                  href="https://search.maven.org/search?q=g:org.dromara%20AND%20hmily"
+                >
+                  <img
+                    src="https://img.shields.io/maven-central/v/org.dromara/hmily.svg?label=maven%20central"
+                  />
+                </a>
+                <a
+                  target="_blank"
+                  href="https://github.com/Dromara/hmily/blob/master/LICENSE"
+                >
+                  <img
+                    src="https://img.shields.io/badge/License-Apache%202.0-blue.svg?label=license"
+                  />
+                </a>
+                <a
+                  target="_blank"
+                  href="https://www.oracle.com/technetwork/java/javase/downloads/index.html"
+                >
+                  <img src="https://img.shields.io/badge/JDK-8+-green.svg" />
+                </a>
+                <a target="_blank" href="https://github.com/dromara/hmily">
+                  <img
+                    src="https://github.com/dromara/hmily/workflows/build/badge.svg"
+                  />
+                </a>
+                <a href="https://codecov.io/gh/dromara/hmily">
+                  <img
+                    src="https://codecov.io/gh/dromara/hmily/branch/master/graph/badge.svg"
+                  />
+                </a>
+                <a
+                  target="_blank"
+                  href="https://gitee.com/dromara/hmily/stargazers"
+                >
+                  <img
+                    src="https://gitee.com/dromara/hmily/badge/star.svg?theme=gvp"
+                    alt="gitee stars"
+                  />
+                </a>
+                <a target="_blank" href="https://github.com/dromara/hmily">
+                  <img
+                    src="https://img.shields.io/github/forks/dromara/hmily.svg"
+                    alt="github forks"
+                  />
+                </a>
+                <a target="_blank" href="https://github.com/dromara/hmily">
+                  <img
+                    src="https://img.shields.io/github/stars/dromara/hmily.svg"
+                    alt="github stars"
+                  />
+                </a>
+                <a target="_blank" href="https://github.com/dromara/hmily">
+                  <img
+                    src="https://img.shields.io/github/contributors/dromara/hmily.svg"
+                    alt="github contributors"
+                  />
+                </a>
+                <a href="https://github.com/Dromara/hmily">
+                  <img
+                    src="https://tokei.rs/b1/github/Dromara/hmily?category=lines"
+                  />
+                </a>
+              </p>
+            </div>
             <div class="project-buttons">
               <a class="project-button primary" :href="obj.website">
                 {{ projectsOption.START_UP }}
@@ -403,12 +475,16 @@ const projectItem = ref([
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 24px;
+    place-items: center;
     @media (max-width: 820px) {
       grid-template-columns: 1fr;
       gap: 0;
     }
     @media (min-width: 1220px) and (max-width: 1439px) {
       grid-template-columns: repeat(3, 1fr);
+    }
+    p {
+      margin: 0.5em 0;
     }
   }
   .project {
@@ -418,9 +494,22 @@ const projectItem = ref([
     flex-direction: column;
     align-items: flex-start;
     justify-content: space-between;
-    gap: 16px;
     border-radius: 8px;
     background: #fff;
+    &:hover {
+      .detail {
+        margin-top: 0;
+        opacity: 1;
+        visibility: visible;
+        z-index: 1000;
+      }
+    }
+  }
+  .project-top {
+    width: 100%;
+    background-color: #fff;
+    position: sticky;
+    z-index: 1000;
   }
   .project-header {
     width: 100%;
@@ -440,12 +529,28 @@ const projectItem = ref([
       white-space: nowrap;
     }
   }
-
+  .project-description {
+    margin-top: 16px;
+    position: sticky;
+    z-index: 1000;
+  }
+  .detail {
+    min-height: 150px;
+    overflow: hidden;
+    margin-top: -150px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.5s ease-in-out;
+    position: sticky;
+    z-index: -1000;
+  }
   .project-buttons {
     width: 100%;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 24px;
+    margin-top: 16px;
+
     .project-button {
       display: inline-block;
       width: 102px;

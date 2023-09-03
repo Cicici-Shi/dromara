@@ -311,6 +311,9 @@ const filteredSectionDetail = computed(() => {
     color: #3e3232;
     font-size: 18px;
     font-weight: 700;
+    &:hover {
+      opacity: 0.66;
+    }
   }
   .desc {
     color: #61687c;

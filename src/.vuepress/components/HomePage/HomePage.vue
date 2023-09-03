@@ -117,11 +117,10 @@
 </template>
 <script setup lang="ts">
 import { watch, ref, reactive, onMounted } from 'vue';
-import { type HomeOption } from './types';
-import { useSiteLocaleData } from '@vuepress/client';
+import { type HomeOption, type GroupedPages } from './types';
+import { useSiteLocaleData, siteData } from '@vuepress/client';
 import enHomeOption from './en';
 import zhHomeOption from './zh';
-import { siteData } from '@vuepress/client';
 
 const allPagesFrontmatter = siteData.value.frontmatter;
 console.log(allPagesFrontmatter);
@@ -131,7 +130,7 @@ let communityLink = reactive([]);
 const enCommunityLink = reactive([]);
 const zhCommunityLink = reactive([]);
 // 初始化分组对象
-const groupedPages = {
+const groupedPages: GroupedPages = {
   新闻: [],
   News: [],
   博客: [],
@@ -149,10 +148,15 @@ for (const frontmatter of allPagesFrontmatter) {
     if (groupedPages[headName] !== undefined) {
       groupedPages[headName].push({
         title: frontmatter.title,
-        url: extractPathFromURL(
-          frontmatter.head.flat().find((item) => item.property === 'og:url')
-            .content
-        ),
+        url:
+          extractPathFromURL(
+            frontmatter.head
+              .flat()
+              .find(
+                (item: { property: string; content: string }) =>
+                  item.property === 'og:url'
+              ).content
+          ) ?? '',
         time: formatDate(frontmatter.date),
         category: headName
       });
@@ -162,11 +166,11 @@ for (const frontmatter of allPagesFrontmatter) {
 
 // 最终得到按照 head 分组的对象，只包含新闻、博客、活动三种 head
 console.log(groupedPages);
-function extractPathFromURL(url) {
+function extractPathFromURL(url: string) {
   const match = url.match(/\/([^/]+\.html)$/);
 
   // 如果匹配成功，返回匹配到的部分
-  if (match && match[1]) {
+  if (match != null && match[1]) {
     return match[1];
   } else {
     return null; // 或者根据需要返回一个默认值或错误提示
@@ -223,7 +227,7 @@ for (const headName in groupedPages) {
 
     const formattedPages = {
       category: headName,
-      icon: icon,
+      icon,
       details: latestPages
         .map((page) => ({
           title: page.title,
@@ -246,7 +250,22 @@ for (const headName in groupedPages) {
 }
 
 console.log(enCommunityLink);
+fetch(`https://gitee.com/api/v5/orgs/dromara/repos`)
+  .then((response) => response.json())
+  .then((data) => {
+    let totalStars = 0;
 
+    // 遍历仓库列表并累加星标数
+    data.forEach((repo) => {
+      totalStars += repo.stargazers_count;
+    });
+
+    // 显示总星标数
+    console.log(`总星标数：${totalStars}`);
+  })
+  .catch((error) => {
+    console.error('获取仓库信息时发生错误：', error);
+  });
 let homeOption: HomeOption = reactive({
   QUICK_START: '',
   DESCRIPTION: '',
