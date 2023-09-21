@@ -34,5 +34,5 @@
     "@vuepress/utils": "2.0.0-beta.66",
     "swiper": "^10.2.0"
   },
-  "packageManager": "^pnpm@8.4.0"
+  "packageManager": "pnpm@8.4.0"
 }
