@@ -13,21 +13,24 @@ const enHomeOption: HomeOption = {
   SLOGAN: 'Slogan',
   SLOGAN_DESCRIPTION:
     'One person may be able to go faster, but a group of people will go further.',
+  STARS_OVERALL: 'Total stars exceed',
+  DATA_SOURCE: '——Data sourced from Gitee and Github',
+  OUR: 'Our',
   PROJECT: 'Recommended Projects',
   MORE_PROJECTS: 'View All Projects',
   PROJECT_DETAILS: [
     {
-      name: 'Hmily',
+      name: 'hmily',
       description: 'Flexible distributed transaction solution.',
       url: 'https://dromara.org/zh/projects/hmily/overview/'
     },
     {
-      name: 'Hutool',
+      name: 'hutool',
       description: 'A set of tools that keep Java sweet.',
       url: 'https://hutool.cn/'
     },
     {
-      name: 'Sa-Token',
+      name: 'sa-token',
       description: 'The most comprehensive Java permission framework.',
       url: 'http://sa-token.dev33.cn/'
     },
@@ -42,17 +45,17 @@ const enHomeOption: HomeOption = {
       url: 'https://yomahub.com/tlog/'
     },
     {
-      name: 'Cubic',
+      name: 'cubic',
       description: 'Distributed monitoring system.',
       url: 'https://cubic.jiagoujishu.com/'
     },
     {
-      name: 'Koalas-rpc',
+      name: 'koalas-rpc',
       description: 'Highly available and extensible RPC framework.',
       url: 'https://github.com/dromara/koalas-rpc'
     },
     {
-      name: 'Fast Request',
+      name: 'fast-request',
       description: "IDEA's postman.",
       url: 'https://dromara.org/fast-request'
     }

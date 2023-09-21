@@ -138,6 +138,7 @@ export default defineUserConfig({
       'components/ProjectsPage/ProjectsPage.vue'
     ),
     '@GitHubStars': path.resolve(__dirname, 'components/GitHubStars.vue'),
+    '@LogoAnimation': path.resolve(__dirname, 'components/LogoAnimation.vue'),
     '@NewsActivityBlogSection': path.resolve(
       __dirname,
       'components/NewsActivityBlogSection/NewsActivityBlogSection.vue'

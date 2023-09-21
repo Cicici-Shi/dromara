@@ -51,7 +51,20 @@
       </div>
     </div>
 
+    <div class="honor-container">
+      <div class="star-wrapper">
+        <div class="honor-text">{{ homeOption.STARS_OVERALL }}</div>
+        <div class="star-block">
+          <div class="star-number">{{ currentStars }}k</div>
+        </div>
+      </div>
+      <cite> {{ homeOption.DATA_SOURCE }} </cite>
+    </div>
+
+    <LogoAnimation />
+
     <div class="project">
+      <img class="project-img" src="/assets/img/projects.png" alt="project" />
       <h2 class="header-project">{{ homeOption.PROJECT }}</h2>
       <a
         :href="
@@ -61,17 +74,52 @@
         >{{ homeOption.MORE_PROJECTS + '&nbsp;&nbsp;>' }}</a
       >
       <div class="project-container">
-        <img class="project-img" src="/assets/img/projects.png" alt="project" />
         <div class="projects">
-          <template v-for="item in homeOption.PROJECT_DETAILS" :key="item.name">
-            <div class="project-item" @click="navigateTo(item.url)">
-              <div class="top-text">{{ item.name }}</div>
-              <div class="bottom-text">{{ item.description }}</div>
-            </div>
-          </template>
+          <swiper
+            :modules="[Navigation, EffectCoverflow]"
+            :navigation="true"
+            :grabCursor="true"
+            :centeredSlides="true"
+            :loop="true"
+            :slidesPerView="3.1"
+            :loopedSlides="3"
+            :slideToClickedSlide="true"
+            :effect="'coverflow'"
+            :coverflowEffect="{
+              rotate: 50,
+              stretch: 0,
+              depth: 100,
+              modifier: 1,
+              slideShadows: false
+            }"
+          >
+            <swiper-slide v-for="item in homeOption.PROJECT_DETAILS">
+              <div class="project-item" @click="navigateTo(item.url)">
+                <img
+                  :src="`/assets/img/logo/${item.name}.png`"
+                  :alt="item.name + ' logo'"
+                />
+                <div class="text">{{ item.description }}</div>
+              </div>
+            </swiper-slide>
+          </swiper>
         </div>
       </div>
     </div>
+
+    <div class="honor-container" style="background-color: #185095">
+      <div class="honor-text">
+        {{ homeOption.OUR }}
+        <span class="gvp">GVP</span>
+        ：
+      </div>
+      <ul class="gvp-container">
+        <li v-for="gvp in gvpProjects" :key="gvp">
+          <a :href="'https://gitee.com/dromara/' + gvp"> {{ gvp }}</a>
+        </li>
+      </ul>
+    </div>
+
     <div class="community">
       <h2 class="header-community">{{ homeOption.COMMUNITY }}</h2>
       <div class="feature-wrapper">
@@ -117,19 +165,57 @@
 </template>
 <script setup lang="ts">
 import { watch, ref, reactive, onMounted } from 'vue';
-import { type HomeOption, type GroupedPages } from './types';
+import {
+  type HomeOption,
+  type GroupedPages,
+  type CommunityLink
+} from './types';
 import { useSiteLocaleData, siteData } from '@vuepress/client';
 import enHomeOption from './en';
 import zhHomeOption from './zh';
+import { Swiper, SwiperSlide } from 'swiper/vue';
+import 'swiper/css';
+import 'swiper/css/effect-coverflow';
+import 'swiper/css/navigation';
+import { EffectCoverflow, Navigation, Autoplay } from 'swiper/modules';
+import LogoAnimation from '@LogoAnimation';
+
+const onSwiper = (swiper) => {
+  console.log(swiper);
+};
+const onSlideChange = () => {
+  console.log('slide change');
+};
+
+const gvpProjects = [
+  'hutool',
+  'hertzbeat',
+  'Sa-Token',
+  'LiteFlow',
+  'Jpom',
+  'MaxKey',
+  'Hmily',
+  'TLog',
+  'cubic',
+  'open-capacity-platform',
+  'electron-egg',
+  'go-view',
+  'mendmix',
+  'northstar',
+  'CloudEon',
+  'koalas-rpc',
+  'Raincat'
+];
 
 const allPagesFrontmatter = siteData.value.frontmatter;
-console.log(allPagesFrontmatter);
+
 const siteLocaleData = useSiteLocaleData();
 const lang = ref(siteLocaleData.value.lang);
-let communityLink = reactive([]);
-const enCommunityLink = reactive([]);
-const zhCommunityLink = reactive([]);
-// 初始化分组对象
+
+let communityLink: CommunityLink[] = reactive([]);
+const enCommunityLink: CommunityLink[] = reactive([]);
+const zhCommunityLink: CommunityLink[] = reactive([]);
+
 const groupedPages: GroupedPages = {
   新闻: [],
   News: [],
@@ -139,11 +225,9 @@ const groupedPages: GroupedPages = {
   Activity: []
 };
 
-// 遍历所有页面的 frontmatter
 for (const frontmatter of allPagesFrontmatter) {
-  // 确保 frontmatter 有 head 属性
-  if (frontmatter.head && frontmatter.head.length > 0) {
-    const headName = frontmatter.head[0][1].name; // 假设 head 是一个数组，取第一个元素的 name 属性作为标识
+  if (frontmatter?.head.length > 0) {
+    const headName = frontmatter.head[0][1].name; // 拿到每篇md文章frontmatter下meta的name属性
     // 如果是新闻、博客或活动，则添加到相应的数组中
     if (groupedPages[headName] !== undefined) {
       groupedPages[headName].push({
@@ -156,116 +240,66 @@ for (const frontmatter of allPagesFrontmatter) {
                 (item: { property: string; content: string }) =>
                   item.property === 'og:url'
               ).content
-          ) ?? '',
-        time: formatDate(frontmatter.date),
-        category: headName
+          ) ?? '', // head的一个数组对象中包含url
+        time: formatDate(frontmatter.date)
       });
     }
   }
 }
 
-// 最终得到按照 head 分组的对象，只包含新闻、博客、活动三种 head
-console.log(groupedPages);
-function extractPathFromURL(url: string) {
+// 从框架提供的url中拿到跳转路径
+function extractPathFromURL(url: string): string | null {
   const match = url.match(/\/([^/]+\.html)$/);
-
-  // 如果匹配成功，返回匹配到的部分
-  if (match != null && match[1]) {
+  if (match?.[1] != null) {
     return match[1];
   } else {
-    return null; // 或者根据需要返回一个默认值或错误提示
+    return null;
   }
 }
-function formatDate(inputDate) {
+function formatDate(inputDate: string): string {
   const date = new Date(inputDate);
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0');
   const day = String(date.getDate()).padStart(2, '0');
-
   return `${year}-${month}-${day}`;
 }
-// 定义一个映射，将 headName 映射到对应的 icon 路径
-const mapping = {
-  News: {
-    icon: '/assets/img/news.png',
-    urlPrefix: 'news/'
-  },
-  Activity: {
-    icon: '/assets/img/activity.png',
-    urlPrefix: 'activity/'
-  },
-  Blog: {
-    icon: '/assets/img/blog.png',
-    urlPrefix: 'blog/'
-  },
-  新闻: {
-    icon: '/assets/img/news.png',
-    urlPrefix: 'news/'
-  },
-  活动: {
-    icon: '/assets/img/activity.png',
-    urlPrefix: 'activity/'
-  },
-  博客: {
-    icon: '/assets/img/blog.png',
-    urlPrefix: 'blog/'
-  }
+
+// 定义一个映射，将 headName 映射到对应的 icon、路径
+const mapping: Record<string, { icon: string; urlPrefix: string }> = {
+  News: { icon: '/assets/img/news.png', urlPrefix: 'news/' },
+  Activity: { icon: '/assets/img/activity.png', urlPrefix: 'activity/' },
+  Blog: { icon: '/assets/img/blog.png', urlPrefix: 'blog/' },
+  新闻: { icon: '/assets/img/news.png', urlPrefix: 'news/' },
+  活动: { icon: '/assets/img/activity.png', urlPrefix: 'activity/' },
+  博客: { icon: '/assets/img/blog.png', urlPrefix: 'blog/' }
 };
+
 // 遍历 groupedPages 中的每个分组
 for (const headName in groupedPages) {
-  if (groupedPages.hasOwnProperty(headName)) {
-    const pages = groupedPages[headName];
+  const pages = groupedPages[headName];
+  // 按照日期排序，并选择日期最新的前 5 个项目
+  pages.sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime());
+  const latestPages = pages.slice(0, 5);
 
-    // 按照日期排序
-    pages.sort((a, b) => new Date(b.date) - new Date(a.date));
+  const { icon, urlPrefix } = mapping[headName];
 
-    // 只选择日期最新的前 5 个项目
-    const latestPages = pages.slice(0, 5);
+  const formattedPages: CommunityLink = {
+    category: headName,
+    icon,
+    details: latestPages.map((page) => ({
+      title: page.title,
+      time: page.time,
+      url: `${urlPrefix}${page.url}`
+    }))
+  };
 
-    // 获取映射
-    const { icon, urlPrefix } = mapping[headName];
-
-    const formattedPages = {
-      category: headName,
-      icon,
-      details: latestPages
-        .map((page) => ({
-          title: page.title,
-          time: page.time,
-          url: `${urlPrefix}${page.url}`
-        }))
-        .sort((a, b) => new Date(b.time) - new Date(a.time)) // 对 details 内部的项目按时间排序
-    };
-
-    if (headName === 'News' || headName === 'Activity' || headName === 'Blog') {
-      enCommunityLink.push(formattedPages);
-    } else if (
-      headName === '新闻' ||
-      headName === '活动' ||
-      headName === '博客'
-    ) {
-      zhCommunityLink.push(formattedPages);
-    }
+  if (['News', 'Activity', 'Blog'].includes(headName)) {
+    enCommunityLink.push(formattedPages);
+  } else if (['新闻', '活动', '博客'].includes(headName)) {
+    zhCommunityLink.push(formattedPages);
   }
 }
 
-console.log(enCommunityLink);
-fetch(`https://gitee.com/api/v5/orgs/dromara/repos`)
-  .then((response) => response.json())
-  .then((data) => {
-    let totalStars = 0;
-
-    // 遍历仓库列表并累加星标数
-    data.forEach((repo) => {
-      totalStars += repo.stargazers_count;
-    });
-
-    // 显示总星标数
-    console.log(`总星标数：${totalStars}`);
-  })
-  .catch((error) => {
-    console.error('获取仓库信息时发生错误：', error);
-  });
 let homeOption: HomeOption = reactive({
   QUICK_START: '',
   DESCRIPTION: '',
@@ -275,6 +309,9 @@ let homeOption: HomeOption = reactive({
   VISION_DESCRIPTION: '',
   SLOGAN: '',
   SLOGAN_DESCRIPTION: '',
+  STARS_OVERALL: '',
+  DATA_SOURCE: '',
+  OUR: '',
   PROJECT: '',
   MORE_PROJECTS: '',
   PROJECT_DETAILS: [],
@@ -284,7 +321,7 @@ let homeOption: HomeOption = reactive({
 
 watch(
   () => siteLocaleData.value.lang,
-  (newLang) => {
+  (newLang: string) => {
     lang.value = newLang;
     if (lang.value === 'zh-CN' || lang.value === '/zh/') {
       homeOption = zhHomeOption;
@@ -298,7 +335,23 @@ watch(
     immediate: true
   }
 );
+
+// 全网star数
+const currentStars = ref(0);
+const totalStars = 204.7; // 来源于gitee总star数与github各仓库star数之和
+const increment = totalStars / (1 * 60);
+const updateValue = (): void => {
+  if (currentStars.value < totalStars) {
+    currentStars.value = parseFloat(
+      (currentStars.value + increment).toFixed(1)
+    );
+    currentStars.value = Math.min(currentStars.value, totalStars); // 确保不超过总星数
+    requestAnimationFrame(updateValue);
+  }
+};
+
 onMounted(() => {
+  // 鼠标滚到项目推荐和社区动态，字由大变小
   const scalingElementProject = document.querySelector(
     '.header-project'
   ) as HTMLHeadingElement;
@@ -312,10 +365,11 @@ onMounted(() => {
   function applyScale(
     element: HTMLHeadingElement,
     top: number,
-    midPoint: number
+    midPoint: number,
+    scaleSize: number
   ): void {
     if (top <= clientH && midPoint <= top) {
-      const scale = 1 + (1.2 * (top - midPoint)) / midPoint;
+      const scale = 1 + (scaleSize * (top - midPoint)) / midPoint;
       element.style.transform = `scale(${scale})`;
     }
   }
@@ -324,12 +378,14 @@ onMounted(() => {
     applyScale(
       scalingElementProject,
       scalingElementProject.getBoundingClientRect().top,
-      halfViewportHeight
+      halfViewportHeight,
+      0.2
     );
     applyScale(
       scalingElementCommunity,
       scalingElementCommunity.getBoundingClientRect().top,
-      halfViewportHeight + 20
+      halfViewportHeight + 20,
+      1.2
     );
   }
   window.addEventListener('scroll', updateScales);
@@ -337,13 +393,32 @@ onMounted(() => {
   window.addEventListener('beforeunload', () => {
     window.removeEventListener('scroll', updateScales);
   });
+
+  // 数字元素进入可视区域后，数字开始增长
+  const starNumber = document.querySelector('.star-number');
+  const observer = new IntersectionObserver(
+    (entries) => {
+      if (entries[0].isIntersecting) {
+        updateValue();
+        observer.disconnect();
+      }
+    },
+    { threshold: 1.0 }
+  );
+  if (starNumber != null) {
+    observer.observe(starNumber);
+  }
 });
-const navigateTo = (url: string) => {
+
+const navigateTo = (url: string): void => {
   window.location.href = url;
 };
 </script>
+
 <style scoped lang="scss">
 .home-page {
+  min-width: 380px;
+  overflow-x: hidden;
   padding-top: var(--navbar-height);
   background: #f9fbff;
   .wrapper {
@@ -373,10 +448,9 @@ const navigateTo = (url: string) => {
       font-weight: bold;
       font-size: 3.6rem;
       -webkit-text-fill-color: transparent;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC',
-        'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica,
-        Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol';
+      font-family: 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB',
+        'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif,
+        'Segoe UI Emoji', 'Segoe UI Symbol';
 
       @media (max-width: 959px) {
         font-size: 2.5rem;
@@ -492,67 +566,148 @@ const navigateTo = (url: string) => {
       }
     }
   }
+  .honor-container {
+    text-align: center;
+    background-color: #096dd9;
+    color: #fff;
+    padding: 20px 0;
+    font-weight: 300;
+    letter-spacing: 2px;
+  }
+  .star-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    padding-bottom: 20px;
+  }
+  .honor-text {
+    font-size: 2.5em;
+    @media (max-width: 959px) {
+      font-size: 2.2em;
+    }
+    @media (max-width: 719px) {
+      font-size: 1.8em;
+    }
+    @media (max-width: 419px) {
+      font-size: 1.2rem;
+    }
+  }
+  .star-block {
+    width: 10%;
+    @media (max-width: 1070px) {
+      width: 25%;
+    }
+    @media (max-width: 500px) {
+      width: 30%;
+    }
+  }
+  @mixin gradient-background {
+    background: linear-gradient(to right, #09d5d9b5 50%, transparent 100%);
+    background-position: bottom 10% center;
+    background-size: 100% 25%;
+    background-repeat: no-repeat;
+  }
+
+  .star-number {
+    font-weight: 500;
+    display: inline-block;
+    margin-left: 10px;
+    font-size: 4em;
+    @media (max-width: 959px) {
+      font-size: 3.5em;
+    }
+    @media (max-width: 719px) {
+      font-size: 3em;
+    }
+    @media (max-width: 419px) {
+      font-size: 2.5em;
+    }
+    @include gradient-background;
+  }
+  .gvp-container {
+    padding: 0 18vw;
+    text-align: left;
+    li {
+      display: inline-block;
+      width: 25%;
+      text-align: center;
+      @media (max-width: 1390px) {
+        width: 33%;
+      }
+      @media (max-width: 1100px) {
+        width: 50%;
+        a {
+          line-height: 2.2;
+        }
+      }
+      @media (max-width: 530px) {
+        width: 100%;
+        a {
+          line-height: 2;
+        }
+      }
+    }
+    a {
+      color: #fff;
+      line-height: 2.5;
+      font-size: 1.1em;
+      font-weight: 400;
+      white-space: nowrap;
+      &:hover {
+        @include gradient-background;
+      }
+    }
+  }
+  .gvp {
+    @include gradient-background;
+  }
+
   .project {
     background: url(/assets/img/project-bg.png) no-repeat;
     background-size: cover;
     background-position: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 50px 0;
+    text-align: center;
   }
-  .project-container {
+  .project-img {
+    width: 25rem;
+    @media (max-width: 568px) {
+      width: 18rem;
+    }
+  }
+  .project-item {
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-    @media (max-width: 991px) {
-      flex-direction: column;
-    }
-
-    .project-img {
-      width: 30rem;
-      @media (max-width: 568px) {
-        width: 20rem;
-      }
-    }
-    .projects {
-      display: grid;
-      padding: 10px 25px 30px;
-      grid-template-columns: repeat(2, 1fr);
-      grid-template-rows: repeat(4, 100px);
-      gap: 10px;
-      min-width: 380px;
-    }
-    .project-item {
-      background-color: #fff;
-      padding: 10px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      border-radius: 8px;
-      border: 1px solid #f1f2f5;
-      color: #414960;
-      cursor: pointer;
-
-      .top-text {
-        font-size: 18px;
-      }
-
-      .bottom-text {
-        font-size: 16px;
-      }
-      &:hover {
-        color: #2e64fe !important;
-        box-shadow: 0px 4px 32px 0px rgba(0, 0, 0, 0.06),
-          0px 0px 10px 0px rgba(0, 0, 0, 0.04);
-      }
+    flex-direction: column;
+    height: 100%;
+    font-size: 1.1rem;
+    padding: 0 20px;
+    border: 1px solid #f1f2f5;
+    text-align: left;
+    img {
+      width: 12rem;
+      max-width: 100%;
     }
   }
+  .swiper {
+    width: 100%;
+    padding-top: 50px;
+    padding-bottom: 50px;
+  }
+  .swiper-slide {
+    height: 220px;
+    background: #fff;
+    border-radius: 15px;
+  }
+  .swiper-slide-active {
+    box-shadow: 0px 4px 32px 0px rgba(0, 0, 0, 0.06),
+      0px 0px 10px 0px rgba(0, 0, 0, 0.04);
+  }
+
   .header-project,
   .header-community {
     text-align: center;
     font-weight: 700;
-    transform: scale(2.2);
   }
   .more {
     color: #2e64fe;
@@ -567,6 +722,8 @@ const navigateTo = (url: string) => {
     }
   }
   .community {
+    width: 100vw;
+    overflow: hidden;
     padding: 20px 0;
     .feature {
       margin: 0;
@@ -600,6 +757,7 @@ const navigateTo = (url: string) => {
       padding: 10px;
       cursor: pointer;
       position: relative;
+      height: 62px;
 
       &:hover {
         .content::after {
